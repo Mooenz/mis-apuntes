@@ -23,13 +23,13 @@ Nos permite acceder a una variable que esta en un bloque de codigo o una funcion
 *- Ambito lexico: Es la capacidad de acceder a una variable desde un bloque de codigo hijo, y estas a su vez estan dentro de un bloque de codigo padre.*
 
 ### **Scope local en bloque**
-El Scope en bloque se comporta igual a lo que anteriormente hemos hablado, las variables declaradas en bloques de codigo solo existen en ese scope, si queremos tener acceso a ella desde fuera de este bloque codigo, se debe declara con VAR.
+El Scope en bloque se comporta igual a lo que anteriormente hemos hablado, las variables declaradas en bloques de codigo solo existen en ese scope, si queremos tener acceso a ella desde fuera de este bloque codigo se deben declara con VAR.
 
 
 
 ## *Malas practicas*
 
-- La reasignacion sigue estando presente en el scope local, para evitar esta mala practica lo mejor es declara variables con las palabras reservadas LET y CONST, Javascript detecta cuando este tipo de variables son reasignadas o doble declaracion.
+- La reasignacion sigue estando presente en el scope local, para evitar esta mala practica lo mejor es declara variables con las palabras reservadas LET y CONST, Javascript detecta cuando este tipo de variables son reasignadas (Para CONST) o doble declaracion.
 
 # **Closure**
 Es la combinacion entre una funcion y ambito lexico en la cual a sido declara dicha funcion. En pocas palabras es una funcion que recuerda el ambito donde ha sido creado.
@@ -40,13 +40,13 @@ Con los closures podemos crear variables privadas, ya que Javascript no es posib
 
 Para lograr esto se debe crear un anidamiento de funciones, donde una funcion padre contiene funciones hijo y a su vez variables declaradas que son accesibles desde la funciones hijo.
 
-Estas variables no pueden ser modificiadas directamente ya que solo se tiene interactividad con ellas atravez de las funciones hijo.
+Estas variables no pueden ser modificiadas directamente ya que solo se tiene interactividad atravez de las funciones hijo.
 
 Podemos crear closures de diferentes formas y de maneras involuntaria.
 
 # **Hoisting**
 
-Es el resulta de como funciona los contextos en la creacion y ejecucion de los mismos. es decir en el momento de ejecutar nuestro codigo, javascript da referencias a cada sentencia, y dependiendo de que tipo de senticia es, asi sera el numero de su referencia.
+Es el resultado de como funciona los contextos en la creacion y ejecucion de los mismos. es decir en el momento de ejecutar nuestro codigo, javascript da referencias a cada sentencia, y dependiendo de que tipo de senticia es, asi sera el numero de su referencia.
 
 ```js
 console.log(name); //undefined
@@ -57,10 +57,6 @@ Segun el codigo anterior, Javascript en el momento de ejecutar el codigo toma la
 
 ```js
 nameOfDog("Elmo"); 
-
-function nameOfDog(name) 
-
-{ console.log(name); };nameOfDog("Elmo"); 
 
 function nameOfDog(name) 
 

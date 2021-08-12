@@ -419,7 +419,7 @@ console.log(symbol.description);
 ## **ES.NEXT, TC39**
 Es.next es como se le denomina a la proxima version que sera añadida a javascript. 
 
-TC39 es un grupo de desarrolladores e implementadores y tiene a cargo revisar todas las propuestas. En caso de ser aceptadas se llevan a ser implementadas. 
+TC39 es un grupo de desarrolladores e implementadores que tienen a cargo revisar todas las propuestas de nuevas actualizaciones para javascript. En caso de ser aceptadas estas proposiciones seran implementadas. 
 
 Estas propuestas tienen una serie de estados antes de ser puestas en marcha:
 
@@ -428,4 +428,3 @@ Estas propuestas tienen una serie de estados antes de ser puestas en marcha:
 - Draft
 - Candidate
 - Ready
-
