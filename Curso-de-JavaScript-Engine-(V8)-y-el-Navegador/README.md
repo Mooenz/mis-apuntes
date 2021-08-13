@@ -89,6 +89,15 @@ Es el proceso de sobre ocupar el call stack ocacionando un crasheo a nuestro nav
 Es el proceso sincrono de JavaScript, osea, el proceso de ejecutar tarea por tarea que estan en el call stack.
 
 # **Asincronía**
-### *Event Loop*
+El proceso de asincronia de JavaScript se da gracias a la interacion entre el motor de JS, Web APIs, Callback queue y Event loop.
+
+### *Web APIs*
+Son APIs que el navegador proporciona, no son parte del motor de JS pero si son accesibles en el entorno de ejecucion. Cuando el motor de JS detecta unas ejecuciones especiales como un http request, una manipulacion en el DOM o un setTimeOut, inmediatamente es enviado a la cola de Web APIs.
+
 ### *Callback queue*
-### *Call web apis*
+Luego estas ejecuciones especiales pasan a Callback Queue donde seran ordenadas segun FIFO (Primeras en entrar, primerar en salir) y finalmente son ejecutadas en el callstack cuando este vacio.
+
+### *Event Loop*
+Es el encargado de comprobar continuamente que el callstack se encuentre vacio y de ser asi, empezara a pasar las ejecuaciones especiales del calllback queue al callstack. Si el callstack se encuentra ocupado, simplemente el event loop estara comprobando este estado constantemente.
+
+Asi se completa el proceso de asincronia en JavaScript.
