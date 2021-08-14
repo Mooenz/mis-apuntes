@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "ejemplos": "node ejemplos.js",
+    "callback:challenge": "node callback-challenge.js",
+    "promise:challenge": "node promise-challenge.js",
+    "async:challenge": "node async-challenge.js"
+  },
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  }
+}
