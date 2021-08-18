@@ -335,6 +335,18 @@ Desde nuestro perfil podemos garantizar que el paquete esta publicado y además 
 # **Actualiza paquetes**
 Al publicar debemos garantizar un minimo estandar para que este publicado el paquete:
 
-- El paquete debe tener un readme, con el fin de explicar de que se trata nuestro paquete, que tipo de lincencia tiene, como instalarlo y usarlo.
+- El paquete debe tener un readme, con el fin de explicar de que se trata nuestro paquete, que tipo de lincencia tiene, como instalarlo y usarlo. Este debe estar en ingles.
 
 - Debe contqar con un repositorio donde se pueda reportar algun bug o presentar una propuesta de mejora.
+
+- Se debe garantizar los test que prueban el paquete
+
+Luego de garantizar que nuestro package.json esta completo generamos nuestro repositorio remoto y a continuacion inicializamos nuevamente la carpeta con npm git. Npm detectara el repositorio y lo ligara automaticamente. 
+
+Para establecer que version tiene el paquete o en otras palabras, indicar que tipo de actualizacion hemos realizado, ejecutamos el comando `npm version que-tipo-cambio`, en el espacio 'que-tipo-cambio' npm recibira 3 posibles parametros:
+
+- Cambio mayor = 'major'
+- Cambio menor = 'minor'
+- Cambio parche = 'patch'
+
+Ahora si podemos actualizar nuestro paquete y se logra publicandolo nuevamente con el comando `npm publish` y listo, nuestro paquete a sido actualizado.
