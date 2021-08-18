@@ -350,3 +350,5 @@ Para establecer que version tiene el paquete o en otras palabras, indicar que ti
 - Cambio parche = 'patch'
 
 Ahora si podemos actualizar nuestro paquete y se logra publicandolo nuevamente con el comando `npm publish` y listo, nuestro paquete a sido actualizado.
+
+[Aqui encontraras el repositorio del paquete publicado en npm.](https://github.com/Mooenz/npm-random-messages)
