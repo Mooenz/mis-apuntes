@@ -1,0 +1,26 @@
+{
+  "name": "jsnpm",
+  "version": "1.0.0",
+  "description": "Construis un paquete para node",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [
+    "javascript",
+    "node",
+    "package"
+  ],
+  "author": "Jose Manuel Montaño <joss92821@hotmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "date-fns": "^2.23.0",
+    "moment": "^2.29.1"
+  },
+  "dependencies": {
+    "json-server": "^0.15.0"
+  },
+  "optionalDependencies": {
+    "eslint": "^7.32.0"
+  }
+}
