@@ -96,4 +96,33 @@ Grid es una firma nueva de pensar sobre como realizar un diseño de distribució
 margin: 10px 15px 20px 25pxx;
 ```
 
-[Repositorio de mis a puntes](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-CSS-Grid-Layout)
+
+# **Grid y las relaciones padre e hijos inmediatos**
+Grid es crear una regilla compuesta por filas y columnas.
+
+Todos los contenedores seran llamados padres y los elementos que se encuentra dentro de el son sus hijos.
+
+```html
+<div class="Padre"> 
+  <div class="Hijos"></div>
+  <div class="Hijos"></div>
+  <div class="Hijos"></div>
+</div>
+```
+Un hijo tambien puede ser tambien padre.
+
+```html
+<div class="Padre"> 
+  <div class="Padre-Hijo">
+    <div class="Hijos"></div>
+    <div class="Hijos"></div>
+  </div>
+  <div class="Hijos"></div>
+  <div class="Hijos"></div>
+</div>
+```
+la identacion nos permite diferenciar cual es el padre o el hijo. Todos los padres deben tener la propiedad `display:grid `
+
+# **Lines, tracks, cell, area, gutters, grid axis, grid row, grid column**
+Los contenedores padres trabaja con ***Lineas*** ya sean verticales o horizontales, ***Tracks*** tiene varias celdas conforman un track tanto vertical como horizontal y ***Areas*** que basicamente es el conjuntos de celdas verticales y horizontales. Los hijo trabajan en las celdas.
+
