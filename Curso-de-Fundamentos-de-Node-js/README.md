@@ -25,3 +25,9 @@ Además puedes crear tus propios módulos.
 
 ## **Orientado a eventos**
 Lo clave de node, esta orientado en eventos. Existe un bucle de eventos que se ejecuta constantemente y eventualmente se dispara un evento que podemos escuchar, esto nos permite programar de forma reactiva.
+
+# **EventLoop: asíncrona por diseño**
+## **Event Loop**
+Es un proceso con un bucle que esta contantemente ejecutandose con el fin de gestionar de forma asincrona todos los eventos de la aplicacion.
+
+Los eventos llegan desde el Event Queue cada evento que se genera desde nuestro codigo va a llegar a la cola de eventos o event queue
