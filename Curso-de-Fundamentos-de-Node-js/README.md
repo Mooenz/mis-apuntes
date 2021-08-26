@@ -179,6 +179,12 @@ Dentro de la función anónima llamamos la siguiente función llamada adiós, qu
 Un ***callback Hell*** es un anidamiento de callbacks que genera lo que comunmente llamamos *codigo espagueti*. 
 
 ```js
+//funciones
+...despertar
+...bañar
+...vestir
+...
+
 despertar("Manuel", function (nombre) {
   bañar(nombre, function () {
     bañar(nombre, function() {
@@ -206,8 +212,378 @@ despertar("Manuel", function (nombre) {
 });
 ```
 
-Si nos encontramos con un callback debemos refactorizarlo y esto implica cambiar su sintasis con promesas.
+Podemos refactorizar este callback hell con funciones recursivas, pero aun asi su lectura seria compleja y dificil.
+
+# **Promesas**
+Si nos encontramos con un callback hell debemos refactorizarlo y esto implica cambiar su sintaxis, en este caso con promesas resolveremos el problema.
 
 ```js
+function despertar(nombre) {
+  return new Promise((resolve, reject) => {
+    if(true) {
+          setTimeout(() => {
+      console.log(`${nombre} desperto`);
+      resolve(nombre);
+    }, 1000);
+    } else {
+      reject(new Error(`${nombre} no desperto`))
+    }
+  });
+};
 
+const vivio = (nombre) => {
+  return new Promise((resolve, reject) => {
+    if(true) {
+      setTimeout(() => {
+        console.log('Hicimos toda clase de cosas');
+        resolve(nombre)
+      }, 1000)      
+    } else {
+      reject( new Error(`${nombre} no hizo nada =(`))
+    }
+  })
+};
+
+function dormir(nombre) {
+  return new Promise((resolve, reject) => {
+    if(true) {
+      console.log(`${nombre} se ha dormido`);
+      resolve(nombre);
+    } else {
+      reject(new Error(`${nombre} no se ha dormido`));
+    }
+  })
+};
+
+despertar("Manuel")
+  .then(vivio)
+  .then(vivio)
+  .then(dormir)
+  .then(() => {
+  console.log("Termino");
+  })
+  .catch(error => {
+    console.error(`Algo fallo ${error}`)
+  });
+```
+
+Lo que hicimos en el código anterior es crear una función que retorna una promesa la cual recibe dos parametro que son `resolve` y `reject`, `resolve` es igual a promesa resuelta y `reject` la promesa falló.
+
+luego hacemos el llamado de la función inicial que es `despertar("Manuel")` y dentro ponemos el argumento. A continuación con los `.then()` llamamos las otras promesas necesarias y por ultimo capturamos los posibles errores con el fin de no propagarlo.
+
+# **Async/await**
+Async Await es una sintaxis nueva que permite definir una funcion de forma explicita como funcion asíncrona y esperar a que esa funcion termine para ejecutar la siguiente. A nivel tecnico no va bloquear el hilo principal.
+
+Es una síntaxis mucho más facíl de hacer y leer a la cual se le denomina 'Azucar Sintactico ' 
+
+```js
+function despertar(nombre) {
+  return new Promise((resolve, reject) => {
+    if(true) {
+          setTimeout(() => {
+      console.log(`${nombre} desperto`);
+      resolve(nombre);
+    }, 2000);
+    } else {
+      reject(new Error(`${nombre} no desperto`))
+    }
+  });
+};
+
+const vivio = (nombre) => {
+  return new Promise((resolve, reject) => {
+    if(true) {
+      setTimeout(() => {
+        console.log('Hicimos toda clase de cosas');
+        resolve(nombre)
+      }, 2000)      
+    } else {
+      reject( new Error(`${nombre} no hizo nada =(`))
+    }
+  })
+};
+
+function dormir(nombre) {
+  return new Promise((resolve, reject) => {
+    if(true) {
+      console.log(`${nombre} se ha dormido`);
+      resolve(nombre);
+    } else {
+      reject(new Error(`${nombre} no se ha dormido`));
+    }
+  })
+};
+
+async function lunes() {
+  await despertar('Manuel');
+  await vivio('Manuel');
+  await dormir('Manuel');
+
+  console.log('Finaliza el proceso');
+}
+
+console.log('Inicia el proceso');
+lunes();
+```
+
+# **Globales**
+Son módulos predeterminados de node y los podemos utilizarlas sin ningún problema, ejemplo: 
+
+```js
+//Mostrar algo en consola
+console.log();
+
+//Mostrar un mensaje en forma de error
+console.error();
+
+//Ejecuta un código despues de un intervalo de tiempo
+setTimeout(()=>{});
+
+//Ejecuta un código cada intervalo de tiempo
+setInterval(()=>{});
+
+//Da prioridad de ejecución
+setImmediate(()=>{});
+```
+
+# **File system**
+Es un modulo que permite acceder a archivos de nuestro sistema y podemos leerlos, escribirlos,modificarlos, cambiarles el nombre o eliminarlos.
+
+Primero debemos traer nuestro modulo
+```js
+const fs = require('fs');
+```
+
+Escritura de un archivo
+```js
+function escribir(ruta, contenido, cb) {
+  fs.writeFile(ruta, contenido, function(err) {
+    if(err) {
+      console.error('Hubo un problema de escritura')
+    } else {
+      console.log('Se ha escrito correctamente');
+    }
+  })
+}
+escribir(`${__dirname}/ejemplos.txt`, 'Soy una linea nueva', console.log);
+```
+
+Lectura de un archivo
+```js
+function leer(ruta, cb) {
+  fs.readFile(ruta, (err, data) => {
+    cb(data.toString());
+  })
+}
+leer(`${__dirname}/ejemplos.txt`, console.log);
+```
+
+Eliminar de un archivo
+```js
+function borrar(ruta, cb) {
+  fs.unlink(ruta, cb);
+}
+borrar(`${__dirname}/ejemplos.txt`, console.log);
+```
+Logramos mejorar nuestro codigo con promerar:
+
+```js
+const fs = require('fs').promises;
+
+async function leer(ruta) {
+  try {
+    const data = await fs.readFile(ruta);
+    console.log(`Ready: ${data.toString()}`);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function escribir(ruta, contenido) {
+  try {
+    fs.writeFile(ruta, contenido);
+    console.log('Se escribio correctamente');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function borrar(ruta) {
+  try {
+    fs.unlink(ruta);
+    console.log('Borrado');
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+escribir(`${__dirname}/ejemplos.txt`, 'Jose Manuel montaño saenz');
+leer(`${__dirname}/ejemplos.txt`);
+borrar(`${__dirname}/ejemplos.txt`, console.log);
+```
+
+Cabe aclarar que el modulo de lectura de archivos tiene mas metodos a utilizar.
+
+# **Console**
+La `consola` contiene diferentes funciones para el despliegue de mensaje en la consola:
+
+
+`console.log('') y console.info(''):` Son iguales para node, desplegaran información.
+```js
+console.log('Uno');
+console.info('Dos');
+
+Uno
+Dos
+``` 
+
+`console.error(''):`En algunas consolas mostrara un mensaje en otro color.
+```js
+console.error('Error');
+
+Error
+``` 
+
+`console.table(''):` Nos mostrara información en estilo tabla.
+```js
+equiposFutbol = {
+  españa: {
+    realmadrid: 'RM',
+    Barselona: 'BSC',
+    atleticoMadrid: 'ATM',
+  }
+}
+console.table(equiposFutbol);
+
+┌─────────┬────────────┬───────────┬────────────────┬──────────────────┬────────┐
+│ (index) │ realMadrid │ Barcelona │ atleticoMadrid │ parisSaintGerman │ monaco │
+├─────────┼────────────┼───────────┼────────────────┼──────────────────┼────────┤
+│ españa  │    'RM'    │   'BSC'   │     'ATM'      │                  │        │
+│ francia │            │           │                │      'PSG'       │ 'MON'  │
+└─────────┴────────────┴───────────┴────────────────┴──────────────────┴────────┘
+```
+
+`console.group(''): y console.groupEnd():` Sirve para agrupar logs de una misma indole.
+```js
+console.group('Equipos de España');
+console.log('Real Madrid');
+console.log('Barcelona');
+console.log('Atlético de Madrid');
+console.group('Equipos de Francia');
+console.log('Paris Saint German');
+console.log('Mónaco');
+console.groupEnd();
+console.groupEnd();
+
+Equipos de España
+  Real Madrid
+  Barcelona
+  Atlético de Madrid
+  Equipos de Francia
+    Paris Saint German
+    Mónaco
+```
+
+`console.count(''):` Es un contador de veces que pasa algo. `console.countReset(''):`
+
+```js
+console.count('Veces');
+console.count('Veces');
+console.count('Veces');
+console.count('Veces');
+console.countReset('Veces');
+console.count('Veces');
+
+Veces: 1
+Veces: 2
+Veces: 3
+Veces: 4
+Veces: 1
+```
+
+# **Try/Catch**
+Se usa para la ejecución de código y captura de errores de esa ejecución. Nos ayuda a tener un control de errores en nuestro código.
+
+Debemos entender que node al detectar un error rompe totalmente la ejecución del hilo para evitar daños mayores, es por esto que con try/catch podemos capturarlo y desplegarlo en la consola o darle un manejo mas eficiente.
+
+Código síncrono
+
+```js
+function seRompera() {
+  return console.log(3 + x); 
+}
+
+function otraFuncion() {
+  return seRompera();
+}
+
+try {
+  otraFuncion();  
+} catch (error) {
+    console.error('Lo siento algo fallo');
+    console.error(error.message);
+}
+
+console.log('Otra instrucción');
+```
+
+Para el código asíncrono debemos considerar que al entrar al event loop este cambia de hilo, pues enviado al event queue que lo envía al thread pool donde es procesado en un hilo independiente, es allí donde el error es detectado y enviado al event loop donde se corta toda la ejecución del programa. 
+
+```js
+function seRompeAsincrono() {
+  setTimeout(()=> {
+       console.log(3 + x)
+  }, 1000)
+}
+
+try {
+  seRompeAsincrono();  
+} catch (error) {
+    console.error('Lo siento algo fallo');
+    console.error(error.message);
+}
+
+console.log('Otra instrucción');
+
+//Fallara
+```
+
+el try/catch debe ir dentro del código asíncrono y cuando exista este cambio de hilo de ejecución, se pueda capturar el error presentado.
+
+```js
+function seRompeAsincrono() {
+  setTimeout(()=> {
+     try {
+       console.log(3 + x)
+     } catch (error) {
+      console.error('Lo siento algo fallo');
+      console.error(error.message);
+     }
+  }, 1000)
+}
+
+try {
+  seRompeAsincrono();  
+} catch (error) {
+    console.error('Lo siento algo fallo');
+    console.error(error.message);
+}
+
+console.log('Otra instrucción');
+```
+
+# **Procesos hijo**
+Node puede correr procesos hijo simplemente es levantar procesos que ejecuten algo y terminen, esto lo logramos con un modulo llamado `chile_process`.
+
+Requerimos el modulo: 
+
+```js
+const { exec } = requiere(''child_process);
+
+exec('ls -la', (err, stdout, sterr) => {
+  if(err) {
+    console.error(err);
+    return false;
+  }
+}) 
 ```
