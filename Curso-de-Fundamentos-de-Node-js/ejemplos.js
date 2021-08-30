@@ -469,13 +469,88 @@ try {
 }
 
 console.log('Otra instruccion');
-*/
-const { exec } = require('child_process');
 
-exec('ls -la', (err, stdout, sterr) => {
-  if(err) {
-    console.error(err);
-    return false;
+
+// const { spawn } = require('child_process');
+
+// let proceso = spawn('ls', ['-la']);
+
+// console.log(proceso.pid);
+// console.log(proceso.connected);
+
+// proceso.stdout.on('data', fun)
+
+const http = require('http');
+
+http.createServer(function(req, res) {
+  console.log('nueva peticion');
+  console.log(req.url);
+
+  switch (req.url) {
+    case '/hola': 
+      res.write('Hola, quetal');
+      res.end();
+      break;
+    case '/':
+      res.write('Hola manu, eres el mejor, me sorprende como estas aprendiendo');
+      res.end();
+      break;
+    default:
+      res.write('Buscas algo?, no encontramos nada');
+      res.end();
+      break;
   }
-  console.log(stdout);
-}) 
+
+  res.writeHead(201, {'content-Type': 'text/plain'});
+  
+  res.end();
+}).listen(3350);
+
+console.log('escuchando htpp en le puerto 3350');
+
+
+const OS = require('os');
+
+console.log(OS.arch()); //saber la arquitectura que tiene la maquina
+console.log(OS.platform()); // que sistema operativo tiene
+console.log(OS.cpus()); // Cuantas cpus cuenta la maquina
+console.log(OS.constants); //
+console.log(OS.freemem()); // Cuanto espacio de memoria libre tiene
+console.log(OS.totalmem()); // Cuanta memoria tiene
+console.log(OS.homedir()); // Directorio donde se encuentra el archivo
+console.log(OS.tmpdir()); // Cual es la carpeta temporal
+console.log(OS.hostname()); // Sabremos cual es nombre host de la maquina
+console.log(OS.networkInterfaces()); // Nos muestra todas las interfaces de red disponibles
+*/
+
+// const p = requiere('process');
+// Se ejecuta antes que el proceso acabe
+process.on('beforeExit', () => {
+  console.log('El proceso va a terminar');
+});
+// Se ejecuta cuando el proceso acaba
+process.on('exit', () => {
+  console.log('Manu, el proceso acabo');
+  setTimeout(() => {
+    console.log('Esto no se va a ver nunca');
+  },0);
+});
+
+setTimeout(() => {
+  console.log('Esto si se va a ver');
+},0);
+// Capturar exepciones que no se capturaron
+process.on('uncaughtException', (error, origen) => {
+  console.error('Vaya se nos ha olvidado capturar un error');  
+  setTimeout(() => {
+    console.log('Esto viene desde las exepciones'); //Lo podemos usar cuando capturamos el error y queremos realizar una accion en otro hilo
+  },0);
+});
+
+funcionQueNoExiste();
+console.log('Si el error no se recoge, esto no sale');
+// Capturar promesas que se rechazaron y no se capturaron
+// process.on('uncaughtRejection'); 
+
+
+

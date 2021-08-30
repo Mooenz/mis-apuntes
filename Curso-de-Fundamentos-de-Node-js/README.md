@@ -578,12 +578,146 @@ Node puede correr procesos hijo simplemente es levantar procesos que ejecuten al
 Requerimos el modulo: 
 
 ```js
-const { exec } = requiere(''child_process);
+const { exec } = require('child_process');
 
 exec('ls -la', (err, stdout, sterr) => {
   if(err) {
     console.error(err);
     return false;
   }
+  console.log(stdout);
 }) 
+```
+
+Con `exec` podemos ejecutar un proceso por debajo de node sin importar en que codigo este escrito.
+Con `spaw`
+
+```js
+const { spaw } = require('child_process');
+
+exec('ls -la', (err, stdout, sterr) => {
+  if(err) {
+    console.error(err);
+    return false;
+  }
+  console.log(stdout);
+}) 
+```
+
+# **Módulos nativos en c++**
+JavaScript permite hacer uso de módulos nativos de c++. Para lograr esto debemos instalar `sudo npm i -g node-gyp`, este modulo de npm nos permite compilar módulos nativos de c++ en node.
+
+Luego debemos tener listo nuestro archivo de código fuente en c++ junto a otro archivo .gyp, que nos ayudara hacer la compilación a JavaScript.
+
+En este archivo .gyp le indicamos que va compilar, como se va llamar el archivo resultante y de donde va a tomar la info a convertir, todo esto lo dejamos como un json
+
+```json
+{
+  "targets": [
+    {   
+      "target_name": "addon",
+      "sources": [ "hola.cc" ]
+    }
+  ]
+}
+```
+luego le decimos a node que configure este modulo, con le comando `node-gyp configure`, como resultado tendremos en un directorio nuevo donde se encontraran diferentes archivos de código nativo, para finalizar con `node-gyp build` creamos nuestro modulo y estará listo para ser usado.
+
+# **Modulo HTTP**
+Nos permite conectarnos con un servidor o crear uno.
+
+```js
+const http = require('http');
+
+http.createServer(function(req, res) {
+  console.log('nueva petición');
+  console.log(req.url);
+
+  switch (req.url) {
+    case '/hola': 
+      res.write('Hola, que tal');
+      res.end();
+      break;
+    case '/':
+      res.write('Hola manu, eres el mejor, me sorprende como estas aprendiendo');
+      res.end();
+      break;
+    default:
+      res.write('Buscas algo?, no encontramos nada para ti');
+      res.end();
+      break;
+  }
+
+  res.writeHead(201, {'content-Type': 'text/plain'});
+  
+  res.end();
+}).listen(3000);
+
+console.log('escuchando http en le puerto 3000');
+```
+
+# **Modulo OS**
+Con este modulo podremos usar o acceder a todos los elementos de bajo nivel que nos provee el OS.
+
+```js
+const OS = require('os');
+
+console.log(OS.arch()); // Saber la arquitectura que tiene la maquina
+console.log(OS.platform()); // Que sistema operativo tiene
+console.log(OS.cpus()); // Cuantas cpus cuenta la maquina
+console.log(OS.constants); // Errores y señales del sistema
+console.log(OS.freemem()); // Cuanto espacio de memoria libre tiene
+console.log(OS.totalmem()); // Cuanta memoria tiene
+console.log(OS.homedir()); // Directorio donde se encuentra el archivo
+console.log(OS.tmpdir()); // Cual es la carpeta temporal
+console.log(OS.hostname()); // Sabremos cual es nombre host de la maquina
+console.log(OS.networkInterfaces()); // Nos muestra todas las interfaces de red disponibles
+```
+
+# **Modulo process**
+Con este modulo podremos controlar los procesos que ejecutamos con node. Process es un modulo por defecto de node y no tenemos que requerirlo.
+
+```js
+// Se ejecuta antes que el proceso acabe
+process.on('beforeExit', () => { //se ejecuta primero que el exit
+  console.log('El proceso va a terminar');
+});
+// Se ejecuta cuando el proceso acaba
+process.on('exit', () => {
+  console.log('Manu, el proceso acabo');
+});
+```
+La diferencia los dos es que `exit` y `beforeExit` es que en el `exit` ya se el proceso se ha desconectado del evenloop.
+
+```js
+
+// El setTimeout que esta dentro del process no se podrá ejecutar, en cambio el de afuera se ejecutara primero que el exit.
+process.on('exit', () => {
+  console.log('Manu, el proceso acabo');
+    setTimeout(() => {
+    console.log('Esto no se va a ver nunca');
+  },0);
+});
+
+
+setTimeout(() => {
+  console.log('Esto si se va a ver');
+},0);
+```
+
+Con process podemos capturar errores que no hemos tenido en cuenta o que no prevenimos.
+
+```js
+// Capturar excepciones que no se tuvieron en cuenta
+process.on('uncaughtException', (error, origen) => {
+  console.error('Vaya se nos ha olvidado capturar un error');  
+  setTimeout(() => {
+    console.log('Esto viene desde las excepciones'); //Lo podemos usar cuando capturamos el error y queremos realizar una acción en otro hilo
+  },0);
+});
+
+funcionQueNoExiste();
+console.log('Si el error no se recoge, esto no sale');
+// Capturar promesas que se rechazaron y no se capturaron
+// process.on('uncaughtRejection'); 
 ```
