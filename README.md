@@ -7,7 +7,7 @@
 - **[Curso de JavaScript Engine (V8) y el Navegador](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-JavaScript-Engine-(V8)-y-el-Navegador)**
 - **[Curso de Asincronismo con JavaScript](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-Asincronismo-con-JavaScript)**
 - **[Curso de Gestión de Dependencias y Paquetes con NPM](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-Gesti%C3%B3n-de-Dependencias-y-Paquetes-con-NPM)**
-- [Clases del Curso de Fundamentos de Node.js](/)
+- **[Clases del Curso de Fundamentos de Node.js](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-Fundamentos-de-Node-js)**
 - [Clases del Curso de Fundamentos de Bases de Datos](/)
 - [Clases del Curso de Backend con Node.js](/)
 - [Clases del Curso Profesional de Git y GitHub](/)
