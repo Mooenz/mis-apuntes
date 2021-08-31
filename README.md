@@ -15,4 +15,4 @@
 - [Clases del Curso Profesional de JavaScript](/)
 - [Clases del Curso de Sistemas de Diseño para Desarrolladores](/)
 ***
-### Con ❤️ por **[Mooenz](https://github.com/Mooenz)**
+### Con ❤️ por **[Mooenz](https://www.linkedin.com/in/mooenz/)**
