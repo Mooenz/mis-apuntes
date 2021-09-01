@@ -721,3 +721,142 @@ console.log('Si el error no se recoge, esto no sale');
 // Capturar promesas que se rechazaron y no se capturaron
 // process.on('uncaughtRejection'); 
 ```
+
+# **Gestión de paquetes: NPM y package.json**
+## **NPM**
+NPM es un gestor de paquetes que son creados por terceros, utilizados por cualquier persona. Estos paquetes pueden llegar a ser tan simples como la suma de dos numeros o  tan complejos como react.js framework de frontend. 
+
+Al utilizar un paquete de npm debemos tener presente que algunos paquetes dependen de otro paquetes y esto puede llegar a ser riesgoso si el paquete que estamos utilizando no estan actualizados.
+
+## **package.json**
+Es un archivo que se crea con el fin de tener imformacion valiosa de nuestro proyecto, en el podemos visualizar como el nombre del proyeecto, el autor, que version esta, que palabras clave contiene o lo referencia, si tiene un repositorio en github, y lo mas importante que dependencia esta usando.
+
+# **Construyendo módulos: Require e Import**
+Cuando tengamos un proyecto robusto es posible que tengamos que trabajar con módulos creados por nosotros mismos.
+
+Cuando hablamos de construir módulos es de modularizar nuestro código mediante el siguiente ejemplo:
+
+Tenemos un archivo que al ser llamado puede saludarnos según la hora del día.
+```js
+// El arachivo se llama 'modulo-requerido.js'
+function saludar(nombre) {
+  console.log(`Hola ${nombre}`);
+  
+  function despedida() {
+    setTimeout(() => {
+      console.log(`Chao ${nombre}`)
+    }, 1000);
+  }
+  return despedida();
+}
+
+module.exports = {
+  saludar,
+  dia: 'Buenos Días',
+  tarde: 'Buenas Tardes',
+  noche: 'Buenas Noches',
+};
+```
+
+Podemos requerir este archivo de la siguiente manera:
+```js
+//traer modulo
+const modulo = require('./modulo-requerido');
+//ejecutar una funcion del modulo
+modulo.saludar('Manuel');
+console.log(modulo.dia);
+console.log(modulo.tarde);
+console.log(modulo.noche);
+```
+
+Para ECMAScript 6 la forma de exportar y requerir módulos ha cambiado pero es una forma experimental, quiere decir que para node aun no es nativo y requiere de una condiciones especiales para su ejecución:
+
+archivo del modulo y el archivo donde se ejecuta el modulo deben tener extensión .mjs
+```js
+// El archivo se llama 'modulo-requerido.mjs'
+function saludar(nombre) {
+  console.log(`Hola ${nombre}`);
+
+  function despedida() {
+    setTimeout(() => {
+      console.log(`Chao ${nombre}`);
+    }, 1000);
+  }
+  return despedida();
+}
+export default {
+  saludar,
+  dia: "Buenos Días",
+  tarde: "Buenas Tardes",
+  noche: "Buenas Noches",
+};
+```
+
+index.mjs es donde se importa el modulo anterior
+```js
+//AHORA segun ECMAScript 6
+import modulo from './modulo-requerido.mjs'
+//ejecutar una funcion del modulo
+modulo.saludar('Manuel');
+console.log(modulo.dia);
+console.log(modulo.tarde);
+console.log(modulo.noche);
+```
+
+# **Módulos útiles**
+Módulos que utilizaremos frecuentemente en nuestras aplicaciones como:
+
+***bycript*** : Permite encriptar un string generando un hash.
+
+***bycript.hash*** : Genera el hash del string, este método recibe por parámetros el string a encriptar, las veces que debe ejecutarse el script para generar un hash aleatorio y por ultimo una función que se encarga de capturar hash o el error que se presente.
+
+***bycript.compare*** : Permite comprar el hash con el string a encriptado y nos devuelve un true o false. `bycript.compare` recibe por parámetros el string a encriptado, luego el hash y por ultimo una función que captura la información o el error que se presente.
+```js
+//importamos el modulo
+const bcrypt = require('bcrypt');
+//declaramos el pass o palabra a encriptar
+const passworld = '1234Segura';
+//bcrypt.hash no permite generar un hash
+bcrypt.hash(passworld, 10, function(error, hash) {
+  console.log(hash);
+//bcrypt.compare nos devuelve un boleano si hash y contraseña son iguales
+  bcrypt.compare(passworld, hash, function(err, res) {
+    console.log(res)
+  });
+});
+```
+***moment*** : Logramos manipular fechas de manera eficiente.
+***moment.format*** : Podemos darle un formato adecuado a nuestra fecha.
+```js
+//importamos el modulo
+const moment = require('moment');
+
+let ahora = moment();
+//establecemos el formato a usar
+let ahoraFormat = ahora.format('HH:mm:ss');
+
+
+console.log(ahoraFormat);
+```
+***sharp*** : Permite trabajar con imágenes
+```js
+//importamos el modulo
+const sharp = require('sharp');
+//ruta de la imagen a modificar
+sharp('fondo-carro.jpg')
+//scalamos la imagen a 500 de alto
+  .resize(500)
+//otorgamos una escala de grises
+  .grayscale()
+//generamos el archivo modificado
+  .toFile('fondo-carro-small.jpg');
+```
+
+# **Datos almacenados vs en memoria**
+La forma de trabajar entre el procesador y la RAM es supremamente rápida si la comparamos con la escritura en disco. 
+
+La RAM tiene muy poca capacidad de almacenamiento pero es supremamente rápido y el disco duro cuenta con poca velocidad pero almacena datos a largo plazo ya que la RAM debe estar energizada constantemente.
+
+En un proceso los tiempos lectura y escritura son directamente proporcionales al tamaño de los datos, esto quiere decir que entre mas datos tengamos mas se va tardar en leerlos y escribirlos en disco.
+
+Lo optimo seria leer la información, contenerla en la memoria RAM para procesarla y al finalizar las modificaciones poder escribirlas en disco.

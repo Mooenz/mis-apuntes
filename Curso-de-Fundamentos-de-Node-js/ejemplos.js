@@ -441,7 +441,7 @@ console.count('Veces');
 console.countReset('Veces');
 console.count('Veces');
 
-
+//Try/Catch
 function seRompera() {
   return console.log(3 + x); 
 }
@@ -470,7 +470,7 @@ try {
 
 console.log('Otra instruccion');
 
-
+//Procesos hijo
 // const { spawn } = require('child_process');
 
 // let proceso = spawn('ls', ['-la']);
@@ -480,6 +480,7 @@ console.log('Otra instruccion');
 
 // proceso.stdout.on('data', fun)
 
+//Modulo HTTP
 const http = require('http');
 
 http.createServer(function(req, res) {
@@ -508,7 +509,7 @@ http.createServer(function(req, res) {
 
 console.log('escuchando htpp en le puerto 3350');
 
-
+//Modulo OS
 const OS = require('os');
 
 console.log(OS.arch()); //saber la arquitectura que tiene la maquina
@@ -521,8 +522,9 @@ console.log(OS.homedir()); // Directorio donde se encuentra el archivo
 console.log(OS.tmpdir()); // Cual es la carpeta temporal
 console.log(OS.hostname()); // Sabremos cual es nombre host de la maquina
 console.log(OS.networkInterfaces()); // Nos muestra todas las interfaces de red disponibles
-*/
 
+
+//Modulo process
 // const p = requiere('process');
 // Se ejecuta antes que el proceso acabe
 process.on('beforeExit', () => {
@@ -552,5 +554,21 @@ console.log('Si el error no se recoge, esto no sale');
 // Capturar promesas que se rechazaron y no se capturaron
 // process.on('uncaughtRejection'); 
 
-
+//Construyendo módulos
+//ANTES
+//traer modulo
+const modulo = require('./importar_modulo/modulo-requerido.js');
+//ejecutar una funcion del modulo
+modulo.saludar('Manuel');
+console.log(modulo.dia);
+console.log(modulo.tarde);
+console.log(modulo.noche);
+//AHORA segun ECMAScript 6
+import modulo from './importar_modulo/modulo-requerido.js'
+//ejecutar una funcion del modulo
+modulo.saludar('Manuel');
+console.log(modulo.dia);
+console.log(modulo.tarde);
+console.log(modulo.noche);
+*/
 
