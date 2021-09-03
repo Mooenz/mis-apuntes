@@ -570,5 +570,49 @@ modulo.saludar('Manuel');
 console.log(modulo.dia);
 console.log(modulo.tarde);
 console.log(modulo.noche);
-*/
 
+//Buffers
+//Crear un buffer
+let crearBuffer = Buffer.alloc(1);
+console.log(crearBuffer);
+//Crear un buffer segun el argumento enviado
+let otroBuffer = Buffer.from([1, 2, 5]);
+let textoBuffer = Buffer.from('Hola');
+
+console.log(otroBuffer);
+console.log(textoBuffer);
+//trabajar un buffer puesto por puesto
+
+let abc = Buffer.alloc(26);
+console.log(abc);
+
+for(let i = 0; i < 26; i++) {
+  abc[i] = i + 97;
+}
+
+console.log(abc);
+console.log(abc.toString());
+
+*/
+//STREAMS
+//lectura
+const fs = require('fs');
+
+let data = '';
+
+let readableStream = fs.createReadStream(__dirname + '/input.txt');
+//
+readableStream.setEncoding('utf-8')
+readableStream.on('data', function(chunk) {
+  data += chunk;
+})
+//
+readableStream.on('end', function(chunk) {
+  console.log(data);
+})
+//escritura
+const stream = require('stream');
+//Clase util sirve para trabajar con herencia automatica
+const transform = stream.Transform();
+
+//STREAMS

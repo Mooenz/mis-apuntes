@@ -860,3 +860,61 @@ La RAM tiene muy poca capacidad de almacenamiento pero es supremamente rápido y
 En un proceso los tiempos lectura y escritura son directamente proporcionales al tamaño de los datos, esto quiere decir que entre mas datos tengamos mas se va tardar en leerlos y escribirlos en disco.
 
 Lo optimo seria leer la información, contenerla en la memoria RAM para procesarla y al finalizar las modificaciones poder escribirlas en disco.
+
+# **Buffer**
+Buffer son datos en binarios o datos en crudo que van de un lado a otro. Ejemplo `48 6f 6c 61` que significa Hola. Trabajar con buffers permite trabajar con la versión mas cruda de podemos tener sin generar que tipo de datos es. 
+
+```js
+//Crear un buffer
+let crearBuffer = Buffer.alloc(1);
+console.log(crearBuffer);
+//Crear un buffer segun el argumento enviado
+let otroBuffer = Buffer.from([1, 2, 5]);
+let textoBuffer = Buffer.from('Hola');
+
+console.log(otroBuffer);
+console.log(textoBuffer);
+```
+
+También podemos trabajar posición a posición de un buffer y lo logramos rellenando el buffer como un arreglo de datos.
+```js
+//trabajar un buffer puesto por puesto
+let abc = Buffer.alloc(26);
+console.log(abc);
+
+for(let i = 0; i < 26; i++) {
+  abc[i] = i + 97;
+}
+
+console.log(abc);
+console.log(abc.toString());//toString() permite transforma 
+```
+Para concluir, buffer es un espacio en memoria con el cual podemos crear directamente con los datos que deseamos o crear el espacio en memoria e ir rellenándolo, esto nos permite trabajar con los datos mas primitivos de node logrando un flexibilidad en el manejo de cada dato o cada byte del buffer.
+
+# **Streams**
+Son flujos de informacion o chorros de informacion, se clasifican como streams de lectura, streams de escritura y streams de lectura y escritura. El flujo de datos que crea un stream es transmitido en pedazos conocidos como 'chunks'
+
+Los streams son usados con el modulo 'fs' de manipulacion de archivos.
+
+***Stream de lecura***
+```js
+const fs = require('fs');
+//variable donde los datos seran guardados
+let data = '';
+//crea el Stream
+let readableStream = fs.createReadStream(__dirname + '/input.txt');
+//le otorga el tipo de codificacion
+readableStream.setEncoding('utf-8');
+//Guarda los datos en la variable data
+readableStream.on('data', function(chunk) {
+  data += chunk;
+})
+//Antes de terminar el stream debe mostrar los datos
+readableStream.on('end', function(chunk) {
+  console.log(data);
+})
+```
+
+Realizar una carga de archivos con streams facilita su upload ya que se realizara por paquetes dando la facilidad de pausar la carga puesto que sabe en que paquete quedo.
+
+***Stream de escritura***
