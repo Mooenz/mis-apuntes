@@ -918,3 +918,132 @@ readableStream.on('end', function(chunk) {
 Realizar una carga de archivos con streams facilita su upload ya que se realizara por paquetes dando la facilidad de pausar la carga puesto que sabe en que paquete quedo.
 
 ***Stream de escritura***
+Empezamos con un tipo de buffer de escritura como lo es :
+```js
+process.stdout.write('Hola ');
+process.stdout.write('Como ');
+process.stdout.write('Estas ');
+```
+
+Otro buffer de escritura es el que vamos a crear : 
+```js
+//Traemos el modulo fs
+const fs = require('fs');
+//Guardamos la ruta
+let readableStream = fs.createReadStream(__dirname + '/input.txt');
+//Traemos el modulo stream
+const stream = require('stream');
+//Clase util sirve para trabajar con herencia automatica
+const util = require('util');
+const { brotliCompress } = require('zlib');
+//Transform es un stream de doble canal, lee y escribe
+const Transform = stream.Transform;
+//Funcion que transforma strings de minusculas a mayusculas
+function Mayus() {
+  //Creamos un constructor para este transform
+  Transform.call(this);
+}
+//Nuestra funcion Mayus trae todo lo que se necesita de transform
+util.inherits(Mayus, Transform);
+//Agregamos la transformacion
+Mayus.prototype._transform = function (chunk, condificacion, cb) {
+  chunkMayus = chunk.toString().toUpperCase();
+  this.push(chunkMayus);
+  cb();
+}
+// Creamos una nueva instacia de mayus
+let mayus = new Mayus();
+//Mostramos el resutado
+readableStream
+  .pipe(mayus)
+  .pipe(process.stdout);
+```
+
+# **Benchmarking**
+Son las pruebas de rendimiento que podemos hacer en node con los tiempo sde ejecucion de nuestro codigo:
+
+```js
+let suma = 0;
+//Console.time nos muestra en consola en el tiempo de que tarda
+console.time('bucle');
+for (let i = 0; i < 100000000; i++) {
+  suma +=1;
+}
+//El codigo que se ejecuta entre console.time y console.timeEnd sera tomado en cuenta
+console.timeEnd('bucle');
+```
+
+Podemos usar la cantidad de console.time necesarios para determinar los tiempos de ejecucion:
+```js
+let suma = 0;
+
+console.time('Programa');
+console.time('bucle')
+for (let i = 0; i < 100000000; i++) {
+  suma +=1;
+}
+console.timeEnd('bucle');
+console.time('bucle 2')
+for (let i = 0; i < 100000000; i++) {
+  suma +=1;
+}
+console.timeEnd('bucle 2');
+console.timeEnd('Programa');
+```
+
+Con funciones asincronas funciona de manera especial : 
+```js
+function asincrona() {
+  return new Promise((resolve, rejec) => {
+    setTimeout(() => {
+      console.log('Termina el proceso asincrono');
+      resolve()
+    })
+  })
+}
+
+console.log('inicia el proceso asincrono')
+console.time('asincrono');
+asincrona()
+  .then(() => {
+    console.timeEnd('asincrono')
+  })
+```
+
+# **Debugger**
+Podemos hacer un debuuger de nuestra aplicacion de node conectandonos a una herramienta de debbuger, esto se facilita con el fleg --inspect : 
+
+```js
+node --inspect nuestroArchivo.js
+```
+
+Debemos dirigirnos a nuestro navegadaos y ir a la ruta `chrome://inspect/#devices`.
+
+# **Error First Callbacks**
+Es un patron que impone la captura de errores como primer parametro, es decir, al ejecutar cualquier bloque de codigo asincrono o sincrono debemos capturar los posibles errores, pues simpre debemos tener presente que todo puede fallar y es mejor capturar estos errores a que nuestra aplicacion se bloquee o no se ejecute correcetamente.
+
+```js
+function asincrona(callback) {
+  setTimeout(() => {
+    try {
+      let a = 3 + z;
+      callback(null, a)
+    } catch (error) {
+      callback(error);
+    }
+  },1000);
+}
+
+asincrona(function(err, dato) {
+  if(err) {
+    console.error('Tenemos un error');
+    console.error(err);
+    // throw err NO VA A FUNCIONAR
+    return false;
+  }
+
+  console.log('Todo va bien y mi nada es: ' + dato)
+});
+
+console.log('Yo si me ejecuto correctamente');
+```

@@ -593,7 +593,6 @@ for(let i = 0; i < 26; i++) {
 console.log(abc);
 console.log(abc.toString());
 
-*/
 //STREAMS
 //lectura
 const fs = require('fs');
@@ -601,18 +600,106 @@ const fs = require('fs');
 let data = '';
 
 let readableStream = fs.createReadStream(__dirname + '/input.txt');
-//
+//Otorga el tipo de codificacion al chunk
 readableStream.setEncoding('utf-8')
+//Guardamos los datos en la variable data
 readableStream.on('data', function(chunk) {
   data += chunk;
 })
-//
+//Mostramos lo contenido en data
 readableStream.on('end', function(chunk) {
   console.log(data);
 })
 //escritura
+//process es un tipo de stream de escritura
+process.stdout.write('Hola ');
+process.stdout.write('Como ');
+process.stdout.write('Estas ');
+//Traemos el modulo fs
+const fs = require('fs');
+//Guardamos la ruta
+let readableStream = fs.createReadStream(__dirname + '/input.txt');
+//Traemos el modulo stream
 const stream = require('stream');
 //Clase util sirve para trabajar con herencia automatica
-const transform = stream.Transform();
-
+const util = require('util');
+const { brotliCompress } = require('zlib');
+//Transform es un stream de doble canal, lee y escribe
+const Transform = stream.Transform;
+//Funcion que transforma strings de minusculas a mayusculas
+function Mayus() {
+  //Creamos un constructor para este transform
+  Transform.call(this);
+}
+//Nuestra funcion Mayus trae todo lo que se necesita de transform
+util.inherits(Mayus, Transform);
+//Agregamos la transformacion
+Mayus.prototype._transform = function (chunk, condificacion, cb) {
+  chunkMayus = chunk.toString().toUpperCase();
+  this.push(chunkMayus);
+  cb();
+}
+// Creamos una nueva instacia de mayus
+let mayus = new Mayus();
+//Mostramos el resutado
+readableStream
+.pipe(mayus)
+.pipe(process.stdout);
 //STREAMS
+//Benchmarking
+//numeros
+let suma = 0;
+console.time('Programa');
+console.time('bucle')
+for (let i = 0; i < 100000000; i++) {
+  suma +=1;
+}
+console.timeEnd('bucle')
+
+console.time('bucle 2')
+for (let i = 0; i < 100000000; i++) {
+  suma +=1;
+}
+console.timeEnd('bucle 2');
+console.timeEnd('Programa');
+function asincrona() {
+  return new Promise((resolve, rejec) => {
+    setTimeout(() => {
+      console.log('Termina el proceso asincrono'); debugger
+      resolve()
+    })
+  })
+}
+
+console.log('inicia el proceso asincrono')
+console.time('asincrono');
+asincrona()
+.then(() => {
+  console.timeEnd('asincrono')
+});
+
+//Error First Callbacks
+function asincrona(callback) {
+  setTimeout(() => {
+    try {
+      let a = 3 + z;
+      callback(null, a)
+    } catch (error) {
+      callback(error);
+    }
+  },1000);
+}
+
+asincrona(function(err, dato) {
+  if(err) {
+    console.error('Tenemos un error');
+    console.error(err);
+    // throw err NO VA A FUNCIONAR
+    return false;
+  }
+
+  console.log('Todo va bien y mi nada es: ' + dato)
+});
+
+console.log('Yo si me ejecuto correctamente');
+*/
