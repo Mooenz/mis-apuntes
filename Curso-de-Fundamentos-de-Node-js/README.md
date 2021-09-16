@@ -30,7 +30,7 @@ Lo clave de node, esta orientado en eventos. Existe un bucle de eventos que se e
 ## **Event Loop**
 Es un proceso con un bucle que esta constantemente ejecutándose con el fin de gestionar de forma asíncrona todos los eventos de la aplicación. 
 
-Estos eventos se ejecutaran aparte del hilo principal y en caso de ejecutarse, es no será bloqueado.
+Estos eventos se ejecutaran aparte del hilo principal y en caso de no ejecutarse, no será bloqueado.
 
 Es por esto que se denomina a node como no bloqueante y altamente concurrente.
 
@@ -1053,5 +1053,27 @@ Con Javascript podemos hacer scraping con un paquete npm llamado pippeteer, lo q
 
 Descargamos el paquete con `npm i puppeteer`, dentro de este paquete viene la version open surce de chromium.
 ```js
+const puppeteer = require('puppeteer');
 
+(async () => {
+  //Ejecutamos el navegador
+  console.log('Lanzamos navegador');
+  const browser = await puppeteer.launch({ headless: false });
+  //Abrimos la pagina de wikipedia
+  const page = await browser.newPage();
+  await page.goto('https://es.wikipedia.org/wiki/Node.js');
+  //Capturamos del DOM el h1 y lo retornamos
+  var titulo1 = await page.evaluate(() => {
+    const h1 = document.querySelector('h1');
+
+    return h1.innerHTML;
+  })
+  //Mostramos en nuestra consola el h1 capturado
+  console.log(titulo1);
+
+  console.log('Cerramos navegador');
+  //Cerramos el navegador
+  browser.close();
+  console.log('Navegador cerrado');
+})();
 ```
