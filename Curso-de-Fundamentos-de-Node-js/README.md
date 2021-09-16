@@ -1047,3 +1047,11 @@ asincrona(function(err, dato) {
 
 console.log('Yo si me ejecuto correctamente');
 ```
+
+# **Scraping**
+Con Javascript podemos hacer scraping con un paquete npm llamado pippeteer, lo que le realizara es abrir una pagina en un chrome, ejecutara lo que nosotros le indiquemos, retornara un resultado y luego se cerrara el chrome. Todo esto se realizara sin necesidad de una interfaz visual.
+
+Descargamos el paquete con `npm i puppeteer`, dentro de este paquete viene la version open surce de chromium.
+```js
+
+```
