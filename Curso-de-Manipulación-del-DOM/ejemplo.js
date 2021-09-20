@@ -98,14 +98,12 @@ for (let i = 0; i < 100; i++) {
   document.body.appendChild(nodo);
 }
 //Optimo
-*/
-const nodos = []
+const nodos = [];
 for (let i = 0; i < 100; i++) {
-  const nodo = document.createElement('button'); 
-  nodo.innerText = `Super boton ${i}`
+  const nodo = document.createElement("button");
+  nodo.innerText = `Super boton ${i}`;
   nodos.push(nodo);
 }
 
-console.log(nodos)
-document.body.appendChild(...nodos);
-
+document.body.append(...nodos);
+*/

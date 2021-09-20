@@ -170,7 +170,7 @@ reemplazo.textContent = 'Lorem ipsum dolor sit amet consectetur, adipisicing eli
 
 padreNodoReemplazar.replaceChild(reemplazo, nodoAReemplazar);
 ```
-#
+# **Operaciones en lote**
 Debemos tener en cuenta el rendimiento de nuestras aplicaciones web puesto que escribir, modificar o eliminar nodos conlleva una carga en el DOM y puede afectar su velocidad de procesamiento.
 
 Si quisieramos agregar 100 nodos nuevos (en este caso botones) a nuestra pagina, una solucion sera la siguiente :
@@ -181,8 +181,33 @@ for (let i = 0; i < 100; i++) {
   document.body.appendChild(nodo);
 }
 ```
-La forma en que realizamos esta operacion no esta optima ya que estamos modificando directamente el DOM 100 veces. Lo mejor que podemos hacer sera el siguiente codigo :
+La forma en que realizamos esta operacion no estan optima ya que estamos modificando directamente el DOM 100 veces. Lo mejor que podemos hacer sera el siguiente codigo :
 ```js
+const nodos = [];
 
+for (let i = 0; i < 100; i++) {
+  const nodo = document.createElement("button");
+  nodo.innerText = `Super boton ${i}`;
+  nodos.push(nodo);
+}
+
+document.body.append(...nodos);
 ```
 No es algo que debemos llevar estrictamente pero si debe estar presente al realizar estas acciones en el DOM.
+
+# **Internacionalizacion de del browse**
+Podemos otorgar formato a nuestros precios, esto lo realizamos con una API llamada 'Intl' permitiendo dar formato a precios segun la monena y hora segun el huso horario.
+
+```js
+function formatoPrecio(precio) {
+  //Creamos una nueva instancia, primer parametro es el lugar donde se encuetra nuestro usuario
+  const new_precio = new window.Intl.NumberFormat('en-EN', {
+    //numero tenga un estilo tipo moneda
+    style: 'currency',
+    // La moneda que utilizara es en dolares
+    currency: 'USD',
+    //indicamos a que variable queremos darle el formato anterior
+  }).format(precio)
+  return new_precio;
+}
+```
