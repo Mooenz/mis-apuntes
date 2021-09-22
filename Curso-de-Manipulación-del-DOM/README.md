@@ -211,3 +211,103 @@ function formatoPrecio(precio) {
   return new_precio;
 }
 ```
+# **Reaccionar a lo que sucede en el DOM**
+Js es un lenguaje basado en evento y toda la dinámica ocurre cuando escuchamos estos evento ya que podemos reaccionar ante ellos, para utilizar evento los agregamos con `node.addEventListener` y para removerlos `node.removeEventListener`.
+
+Al agregar el listener recibirá unos parámetros, el primer parámetro será tipo de evento y el segundo una función donde se realizara la acción a tomar cuando el evento sea capturado.
+
+## **addEventListener**
+Evento `'click'`, detecta la acción click al elemento que se le otorgo.  :
+
+```js
+const titulo = document.querySelector('#titulo__main');
+
+const accion = () => {
+  console.log('Haz dado click');
+}
+
+titulo.addEventListener('click', accion);
+```
+
+Evento `'input'`, detecta la pulsación del teclado, como su nombre lo indica es cuando estamos ingresando datos a un input :
+
+```js
+const input = document.querySelector('#nombre');
+
+const accion = () => {
+  console.log('Ingresaste algún dato');
+}
+
+input.addEventListener('input', accion);
+```
+A este evento también podemos otorgarle un poco de mas de lógica : 
+
+```js
+
+const input = document.querySelector('#nombre');
+
+const accion = (ev) => {
+  if(ev.data == 'j') {
+    console.log('Escribiste la j');
+  }  
+}
+
+input.addEventListener('input', accion);
+```
+
+El parámetro `ev` es el evento que devuelve el input, en el contiene información valiosa, por ejemplo, el elemento donde se ocurrió el evento, su contenido y mucho mas...
+
+## **removeEventListener**
+Para remover listeners : 
+```js
+titulo.removeEventListener('click', accion);
+input.removeEventListener('input', accion);
+```
+
+Es importante tener en cuenta que las funciones que pasamos por parámetro a los listeners no deben ser anónimas ya que no lograremos eliminarlas. 
+
+# **Event propagation**
+El DOM es un árbol que renderiza nodos de forma jerárquica y cuando se agrega un evento, este se propaga a lo largo de ese nodo. 
+
+Esto quiere decir que un elemento hijo activa su evento 'x', este se propagara en toda su ramificación hasta llegar a el elemento padre de mayor jerarquía y en su paso activara los demás eventos que encuentre.
+
+podemos asemejar esto como un burbuja de aire que sube a la superficie. La propagación de evento es natural pero no es beneficioso para nuestro DOM, por esto debemos hacer que no suceda.
+
+```js
+const parrafo = document.querySelector('p');
+const contenedor = document.querySelector('.contenedor');
+
+
+const mostrarMensaje = (ev) => {
+  ev.stopPropagation();
+  console.log(ev.currentTarget.nodeName);
+}
+
+document.body.addEventListener('click', mostrarMensaje);
+contenedor.addEventListener('click', mostrarMensaje);
+parrafo.addEventListener('click', mostrarMensaje);
+```
+Detener la propagación del evento puede ocasionar conflictos con otras librerías o otras personas si querrá que la propagación se genere.
+
+# **Event delegation**
+Es una solución eficaz para evitar el `stopPropagation`. Básicamente lo que debemos es colocar nuestro listener en el elemento padre y en la función a ejecutar colocamos una condicional para saber el tipo de selector que disparo el evento, ya con esta información ejecutamos código según el ejecutor del evento.
+
+Este patrón lo debemos usar siempre que sea posible y mas cuando la cantidad de listener es relativamente enorme.
+```js
+const accion = (ev) => {
+  if (ev.target.id === 'titulo__main') {
+    console.log('Soy el titulo');
+  }
+
+  if (ev.target.classList.value === 'subtitulo') {
+    console.log('Soy el subtitulo');
+  }
+
+  if(ev.target.nodeName === 'P') {
+    console.log('Estamos en el parrafo');
+  }
+
+}
+
+document.body.addEventListener('click', accion);
+```

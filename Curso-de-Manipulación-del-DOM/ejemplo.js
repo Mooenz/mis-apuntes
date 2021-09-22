@@ -106,4 +106,62 @@ for (let i = 0; i < 100; i++) {
 }
 
 document.body.append(...nodos);
+//Reaccionar a lo que sucede en el DOM
+//CLICK
+const titulo = document.querySelector('#titulo__main');
+
+const accion = () => {
+  console.log('Haz dado click');
+}
+
+titulo.addEventListener('click', accion);
+//INPUT
+const input = document.querySelector('#nombre');
+
+const accion = () => {
+  console.log('Ingresaste algun dato');
+}
+
+input.addEventListener('input', accion);
+//INPUT con el parametro event
+const input = document.querySelector('#nombre');
+
+const accion = (ev) => {
+  if(ev.data == 'j') {
+    console.log('Escribiste la j');
+  }  
+}
+
+input.addEventListener('input', accion);
+//Event propagation
+const parrafo = document.querySelector('p');
+const contenedor = document.querySelector('.contenedor');
+
+
+const mostrarMensaje = (ev) => {
+  ev.stopPropagation();
+  console.log(ev.currentTarget.nodeName);
+}
+
+document.body.addEventListener('click', mostrarMensaje);
+contenedor.addEventListener('click', mostrarMensaje);
+parrafo.addEventListener('click', mostrarMensaje);
+//Event delegation
 */
+
+const accion = (ev) => {
+  if (ev.target.id === 'titulo__main') {
+    console.log('Soy el titulo');
+  }
+
+  if (ev.target.classList.value === 'subtitulo') {
+    console.log('Soy el subtitulo');
+  }
+
+  if(ev.target.nodeName === 'P') {
+    console.log('Estamos en el parrafo');
+  }
+
+}
+
+document.body.addEventListener('click', accion);
