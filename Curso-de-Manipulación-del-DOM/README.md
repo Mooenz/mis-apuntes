@@ -311,3 +311,32 @@ const accion = (ev) => {
 
 document.body.addEventListener('click', accion);
 ```
+# **Intersection Observer**
+Permite saber cuando una elemento se intersecta conel viweport, el viweport es la procion de la pantalla que como usuarios vemos visible en el navegador.
+
+```js
+const isIntersecting = (entry) => {
+  //retorna un boleano si sirve
+  return entry.isIntersecting;
+}
+
+const action = (entry) => {
+  //El nodo que tiene el observador
+  const nodo = entry.target;
+
+  //deja de observar al elemento
+  observation.unobserve(nodo);
+}
+
+//guardamos una instancia del observador, recibe por parametro un cb y este a a subes recibe un elemento que será observado.
+const observation = new IntersectionObserver((entries) => {
+  entries
+    .filter(isIntersecting) //filtramos el boleano si se ha generado una intersepcion
+    .forEach(action); //realizamos una accion por cada elemento que se esta interceptando
+})
+
+export const registerImage = (image) => {
+  //Le decimos a la instacia del observador que observe el elemento enciado
+  observation.observe(image);
+}
+```
