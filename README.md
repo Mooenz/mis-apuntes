@@ -9,7 +9,7 @@
 - **[Curso de Gestión de Dependencias y Paquetes con NPM](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-Gesti%C3%B3n-de-Dependencias-y-Paquetes-con-NPM)**
 - **[Clases del Curso de Fundamentos de Node.js](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-Fundamentos-de-Node-js)**
 - **[Curso de Manipulación del DOM](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-Manipulaci%C3%B3n-del-DOM)**
-- [Clases del Curso de Fundamentos de Bases de Datos](/)
+- **[Clases del Curso de Fundamentos de Bases de Datos](https://github.com/Mooenz/mis-apuntes/tree/main/Curso-de-Fundamentos-de-Bases-de-Datos)**
 - [Clases del Curso de Backend con Node.js](/)
 - [Clases del Curso Profesional de Git y GitHub](/)
 - [Clases del Curso de Creación de Portafolio y CV](/)
