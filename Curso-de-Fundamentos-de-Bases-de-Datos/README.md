@@ -239,3 +239,8 @@ Significa quele añadiremos reglas a nuestra base de datos.
 *INDEX* : Permite hacer mas busquedas mas rapidas, pero tiene como desventaja que cada datos nuevo debe volver a calcular sus indices.
 
 # **Diagrama Físico: normalizando Platziblog**
+A nuestro diagrama de entidad relacion aplicaremos los contraints para realizar el diagrama fisico : 
+
+![diagrama fisico tienda online](./assets/tienda-online.png)
+
+# **Formas normales en DB relacionales**
