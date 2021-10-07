@@ -167,18 +167,18 @@ div {
 /* de id */
 
 #titulo2 {
-  color : blue;
+  color: blue;
 }
 
 /* de atributo */
 
-a[href ="/nosotros.html"] {
+a[href="/nosotros.html"] {
   color: #fff;
 }
 
 /* universal */
 * {
-  background: rgba(100, 70 ,0 ,1);
+  background: rgba(100, 70, 0, 1);
 }
 ```
 
