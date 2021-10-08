@@ -1,0 +1,47 @@
+.main-exchange-content {
+  width: 450px;
+}
+
+.main-exchange-content::-webkit-scrollbar {
+  display: none;
+}
+
+.main-plans-articles::-webkit-scrollbar {
+  display: none;
+}
+
+.product-cards {
+  grid-template-columns: repeat(2, auto);
+}
+
+.main-plans-articles {
+  justify-content: center;
+}
+
+.bitcoin-img {
+  align-items: center;
+}
+
+.bitcoin-img h2 {
+  font-size: 4rem;
+  padding: 0;
+}
+
+.footer-rigth {
+  display: flex;
+  align-items: center;
+} 
+
+.footer-rigth p {
+  margin-left: 10px ;
+  font-size: 1.4rem;
+}
+
+.footer-left ul {
+  display: flex;
+  align-items: center;
+}
+
+.footer-left ul li {
+  margin: 0 5px 8px;
+}
