@@ -30,10 +30,10 @@
 .footer-rigth {
   display: flex;
   align-items: center;
-} 
+}
 
 .footer-rigth p {
-  margin-left: 10px ;
+  margin-left: 10px;
   font-size: 1.4rem;
 }
 
