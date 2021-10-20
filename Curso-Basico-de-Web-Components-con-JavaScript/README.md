@@ -75,3 +75,130 @@ Los componentes estan hechos para coexistir con todo el ecosistema web sin ningu
 ### **Consistencia**
 
 Naturalmente un componente es reutilizable e interoperable logrando una versatilidad en su uso, Quiere decir que nuestro componente puede ser utilizado y personalizado dependiendo de la necesidad del aplicativo.
+
+## **Ciclo de vida de un componente**
+
+Están directamente ligados con el DOM son parte importante del critical rendering path.
+
+### **Constructor**
+
+Nuestro paso numero uno es crear el constructor de nuestras clases, este contendrá y pondrá en memorias todas las variables que utilizaremos para pintar el componente. En este paso no debemos pintar el componente.
+
+### **ConnectedCallback**
+
+Aquí el elemento existe en el DOM y es un nodo de el. En este paso podemos manipularlo.
+
+### **DisconnectedCallback**
+
+Cuando quitamos el componente del DOM, Esto se genera cuando estamos interactuado con el usuario realizando la visualización o eliminando el componente del DOM, Logrando una liberacion de memoria.
+
+### **AttributeChangedCallback**
+
+Es la forma de cambiar los atributos de nuestras etiqueta HTML.
+
+### **AdoptedCallback**
+
+Es un ciclo de vida que rara vez se utiliza ya que esta presente cuando se va renderizar un componente dentro de un iframe.
+
+## **Custom Elements**
+
+Como ya definimos que es custom Elements ahora mostraremos un ejemplo:
+
+```js
+// Podemos crear nuestro template fuera de la clase
+const template = document.createElement('div');
+
+template.innerHTML = `
+  <style>
+  .texto {
+    color: red;
+    font-size: 20px;
+   }
+
+    p {
+      color: blue;
+    }
+  </style>
+  <p class="texto">Hola Jose Manuel</p>
+  <p>Eres el mejor manu no pares de aprender!</p>
+`;
+
+// Creamos nuestra componente como una clase extendida por la api HMTLElement
+class myELement extends HTMLElement {
+  // El contructor es donde creamos las variables a utilizar
+  constructor() {
+    //Tener acceso a todos los metodos de la api HTMLElements
+    super();
+
+    // Creamos una etiqueta de parrafo
+    this.p = document.createElement('p');
+  }
+
+  //Utilizamos el connectCallback y damos a entender que esto debe ir dentro de la etiqueta personalizada.
+  connectedCallback() {
+    this.p.textContent = 'Holaa manu';
+    this.appendChild(this.p);
+    this.appendChild(template);
+  }
+}
+//Definimos nuestra etiqueta con customElements y recibe dos parametros, el nombre de nuestra etiqueta personalizada y de que clase se generará.
+customElements.define('my-element', myELement);
+```
+
+En nuestro archivo HTML solo debemos llamar el archivo JavaScript y hacer uso de nuestra etiqueta personalizada en el `body`.
+
+```html
+<body>
+  <my-element></my-element>
+  <script src="./ejemplo.js"></script>
+</body>
+```
+
+## **Template**
+
+Los templates es una etiqueta especial de HTML que clona su contenido y regresa un document fratment y con JavaScript su contenido sera renderizado:
+
+```js
+class myELement extends HTMLElement {
+  constructor() {
+    super();
+  }
+  //Creamos un metodo que contendra toda la estructura HTML.
+  getTemplate() {
+    const template = document.createElement('template');
+    template.innerHTML = `
+      <section>
+        <h2>Hola manu de nuevo</h2>
+        <div>
+          <p>Soy mas texto de ejemplo</p>
+        </div>
+      </secetion>
+      ${this.getStyles}
+    `;
+    //llamamos los estilos
+    return template;
+  }
+  // Creamos los estilos
+  getStyles() {
+    return `    
+      <style>
+        h2 {
+          color: red;
+        }
+      </style>
+    `;
+  }
+  //renderizamos la etiqueta template, le decimos que renderice todo los nodos que contiene
+  render() {
+    this.appendChild(this.getTemplate().content.cloneNode(true));
+  }
+  // Lo renderizamos en la etiqueta personalizada
+  connectedCallback() {
+    this.render();
+  }
+}
+
+customElements.define('my-element', myELement);
+```
+
+document fratment y template tiene un problema con los estilos ya que puede entrar en conflicto debido a que su codigo interactua con el ya existente, creando la posibilidad de sobre escribir estilos o accidentalmente usar estilos establecidos.
