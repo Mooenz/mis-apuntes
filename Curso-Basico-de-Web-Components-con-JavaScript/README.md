@@ -10,7 +10,7 @@ Aquí nace el concepto de web components basado en un encapsulado de JS vanila d
 
 Podemos comprar los web components con piezas de lego, codigo encapsulado que reutilizamos constantemente. Los web components son primitivos de bajo nivel que te permiten definir tus propios elementos HTML.
 
-los web components estan contruidos con web apis :
+los web components estan construidos con web apis :
 
 - HTML Templates
 
@@ -156,7 +156,7 @@ En nuestro archivo HTML solo debemos llamar el archivo JavaScript y hacer uso de
 
 ## **Template**
 
-Los templates es una etiqueta especial de HTML que clona su contenido y regresa un document fratment y con JavaScript su contenido sera renderizado:
+Los templates es una etiqueta especial de HTML que clona su contenido y regresa un document document fragment y con JavaScript su contenido sera renderizado:
 
 ```js
 class myELement extends HTMLElement {
@@ -172,8 +172,8 @@ class myELement extends HTMLElement {
         <div>
           <p>Soy mas texto de ejemplo</p>
         </div>
-      </secetion>
-      ${this.getStyles}
+      </section>
+      ${this.getStyles()}
     `;
     //llamamos los estilos
     return template;
@@ -201,4 +201,179 @@ class myELement extends HTMLElement {
 customElements.define('my-element', myELement);
 ```
 
-document fratment y template tiene un problema con los estilos ya que puede entrar en conflicto debido a que su codigo interactua con el ya existente, creando la posibilidad de sobre escribir estilos o accidentalmente usar estilos establecidos.
+document fragment y template tienen un problema con los estilos ya que puede entrar en conflicto debido a que su codigo interactua con el ya existente, creando la posibilidad de sobre escribir estilos o accidentalmente usar estilos establecidos.
+
+## **shadow DOM**
+
+Con shadow DOM podemos encapsular los estilos del componente sin tener que interactuar con los estilos fuera del el.
+
+Esto se logra debido a que shadow DOM permite crear una especie de mini DOM que permite encapsular codigo y no sufrir modificaciones.
+
+```js
+class myELement extends HTMLElement {
+  constructor() {
+    super();
+    //Llamamos la api de Shadow y lo dejamos en modo 'open', para lograr ver lo que esta dentro de shadow DOM
+    this.attachShadow({ mode: 'open' });
+  }
+
+  getTemplate() {
+    const template = document.createElement('template');
+    template.innerHTML = `
+        <section>
+          <h2>Hola manu de nuevo</h2>
+          <div>
+            <p>Soy mas texto de ejemplo</p>
+          </div>
+        </section>
+        ${this.getStyles()}
+      `;
+    return template;
+  }
+
+  getStyles() {
+    return `    
+        <style>
+          h2 {
+            color: red;
+          }
+        </style>
+      `;
+  }
+
+  render() {
+    // Agregamos nuestro contenido a shadowRoot
+    this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true));
+  }
+
+  //renderizamos el contenido.
+  connectedCallback() {
+    this.render();
+  }
+}
+
+customElements.define('my-element', myELement);
+```
+
+Si queremos seleccionar un elemento específico no podemos utilizar `document.querySelector`, ahora utilizáremos `shadowRoot.querySelector`.
+
+## **Content Slot**
+
+Permite introducir contenido HTML desde fuera del componente sin entrar a su codigo fuente.
+
+```html
+<my-element>Hola soy un texto fuera de my element</my-element>
+```
+
+```js
+  getTemplate() {
+    const template = document.createElement('template');
+    template.innerHTML = `
+        <section>
+          <h2>
+          <slot></slot>
+          </h2>
+        </section>
+        ${this.getStyles()}
+      `;
+    return template;
+  }
+```
+
+## **Multi Content Slot**
+
+Podemos introducir diferentes textos a nuestro componente y acomodarlos segun se requiera. Esto permite mas dinamismo a nuestro componentes.
+
+```html
+<my-element>
+  <!-- A cada uno de nuestros span le pasamos un atributo slot el cual va hacer match el slot name del componente -->
+  <span slot="titulo"> Soy el titulo</span>
+  <span slot="parrafo"> Soy el texto del parrafo</span>
+</my-element>
+```
+
+```js
+  getTemplate() {
+    // Agregamos el atributo name a los slots.
+    const template = document.createElement('template');
+    template.innerHTML = `
+        <section>
+          <h2>
+          <slot name="titulo"></slot>
+          </h2>
+          <div>
+          <p>
+          <slot name="parrafo">
+          </slot>
+          </p>
+          </div>
+        </section>
+        ${this.getStyles()}
+      `;
+    return template;
+  }
+```
+
+## **Atributos**
+
+Por medio de estos logramos crear un dinamismo mas limpio y entendible, pero debemos tener cuidado con los atributos existentes que algunas etiquetas tienen.
+
+```html
+<my-element
+  titulo="Hola soy un titulo"
+  parrafo="Hola soy el texto del parrafo"
+  img="https://avatars3.githubusercontent.com/u/1905708?s=280&v=4/"
+></my-element>
+```
+
+```js
+class myELement extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    //Creamos las variables necesarias para traer los atributos que colocaremos en el html. 
+    this.titulo = this.getAttribute('titulo');
+    this.parrafo = this.getAttribute('parrafo');
+    this.img = this.getAttribute('img');
+  }
+
+  getTemplate() {
+    const template = document.createElement('template');
+    template.innerHTML = `
+        <section>
+          <h2>${this.titulo}</h2>
+          <div>
+          <p>${this.parrafo}</p>
+          <img src=${this.img} alt="Una imagen"/>
+          </div>
+        </section>
+        ${this.getStyles()}
+      `;
+    return template;
+  }
+
+  getStyles() {
+    return `    
+        <style>
+          h2 {
+            color: red;
+          }
+        </style>
+      `;
+  }
+
+  render() {
+    this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true));
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+}
+
+customElements.define('my-element', myELement);
+```
+
+## **attributeChangedCallback**
+
+
