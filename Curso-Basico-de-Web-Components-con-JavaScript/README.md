@@ -543,36 +543,4 @@ Permite manipular por medio de variables en css los estilos segun la necesidad. 
 
 
 ```css
-  getStyles() {
-    return `
-    <style>
-      :host {
-        --primary-color: tomato;
-        --secondary-color: salmon;
-        --heading-primary: 30px;
-        --heading-secondary: 25px;
-        display: inline-block;
-        width: 100%;
-        min-width: 300px;
-        max-width: 450px;
-      }
-
-      section {
-        background: var(--primary-color)
-      }
-
-      section div {
-        background: var(--secondary-color);
-      }
-
-      h1 {
-        font-size: var(--heading-primary);
-      }
-
-      p {
-        font-size: var(--heading-secondary);
-      }
-    </style>
-    `;
-  }
 ```
