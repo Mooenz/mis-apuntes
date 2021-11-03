@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Components</title>
+    <style>
+      my-element {
+        --primary-color: blue;
+        --heading-primary: 40px;
+      }
+
+      .segundo {
+        --primary-color: red;
+      }
+
+      .tercero {
+        --secondary-color: lime;
+      }
+    </style>
+  </head>
+  <body>
+    <my-element>
+      <span slot="titulo">Hola desde una etiqueta h1</span>
+      <span class="texto" slot="parrafo"
+        >Soy desde una etiqueta de parrafo</span
+      >
+    </my-element>
+
+    <my-element class="segundo">
+      <span slot="titulo">Hola desde una etiqueta h1</span>
+      <span class="texto" slot="parrafo"
+        >Soy desde una etiqueta de parrafo</span
+      >
+    </my-element>
+
+    <my-element class="tercero">
+      <span slot="titulo">Hola desde una etiqueta h1</span>
+      <span class="texto" slot="parrafo"
+        >Soy desde una etiqueta de parrafo</span
+      >
+    </my-element>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>

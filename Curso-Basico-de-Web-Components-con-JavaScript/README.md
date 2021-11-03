@@ -537,3 +537,11 @@ Con el pseudoelemento slotted podemos dar estilos directamente a los elementos q
 ```
 
 ## **CSS custom properties**
+
+Permite manipular por medio de variables en css los estilos segun la necesidad. Con lo estilos en linea podemos modificar los estilos de nuestro componentes, evadiendo el shadonDOM.
+
+
+
+```css
+
+```
