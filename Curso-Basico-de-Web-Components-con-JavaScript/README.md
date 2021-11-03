@@ -100,7 +100,7 @@ Es la forma de cambiar los atributos de nuestras etiqueta HTML.
 
 Es un ciclo de vida que rara vez se utiliza ya que esta presente cuando se va renderizar un componente dentro de un iframe.
 
-## **Custom Elements**
+## **Custom Element**
 
 Como ya definimos que es custom Elements ahora mostraremos un ejemplo:
 
@@ -331,7 +331,7 @@ class myELement extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    //Creamos las variables necesarias para traer los atributos que colocaremos en el html. 
+    //Creamos las variables necesarias para traer los atributos que colocaremos en el html.
     this.titulo = this.getAttribute('titulo');
     this.parrafo = this.getAttribute('parrafo');
     this.img = this.getAttribute('img');
@@ -376,4 +376,164 @@ customElements.define('my-element', myELement);
 
 ## **attributeChangedCallback**
 
+personalizar un componente por medio de etiquetas es correcto ya que utilizamos JavaScript vanila, pero el uso del ciclo de vida attributeChangedCallback es el correcto en componentes web.
 
+```js
+  // Dar de alta a las variables del obsevador, variables que seran tomadas encuenta por el observador
+  static get observedAttributes() {
+    return ['titulo', 'parrafo', 'img'];
+  }
+  // recibe 3 parametros, 1. valor actual, 2. valor viejo 3. nuevo valor
+  attributeChangedCallback(attr, oldVal, newVal) {
+    //pregunta si el valor actual del atributo es igual a la variable definida entonces el contenido del atributo debe ser igual al nuevo valor.
+    if (attr === 'titulo') {
+      this.titulo = newVal;
+    }
+
+    if (attr === 'parrafo') {
+      this.parrafo = newVal;
+    }
+
+    if (attr === 'img') {
+      this.img = newVal;
+    }
+  }
+```
+
+## **DisconnectCallback**
+
+Nos ayuda a retirar caracteristicas de los componentes que no estamos usando, caracteristicas como variables o eventos con el fin de liberar memoria.
+
+```js
+class MyCustomElement extends HTMLElement {
+  constructor() {
+    super();
+    // 1 ciclo de vida
+    console.log('Hola desde el constructor - Memoria');
+  }
+  // 2 ciclo de vida
+  connectedCallback() {
+    console.log('Hola desde el DOM');
+  }
+  // 3 ciclo de vida, aqui deslindamos los eventos
+  disconnectedCallback() {
+    console.log('Adios del DOM');
+  }
+}
+
+customElements.define('my-custome-element', MyCustomElement);
+
+//removemos el componente
+document.querySelector('my-custome-element').remove();
+```
+
+## **:host**
+
+pseudoclase que nos ayuda otorgar estilos base al componente o que nuestro componente tenga ciertas caracteristicas iniciales. es una pseudoclase que solo se utiliza en web components.
+
+```css
+  getStyle() {
+    return `
+      <style>
+      :host {
+        display: inline-block;
+        width: 100%;
+        min-width: 300px;
+        max-width: 400px;
+        font-size: 20px;
+        background: gray;
+      }
+      </style>
+    `;
+  }
+```
+
+Los estilo dentro de host estaran afectando al componente o al elemento creado y los estilos fuera de host se aplicaran a los elementos que estaran dentro del componente.
+
+host nos ayuda a definir estilos dependiendo de ciertas reglasm y si se cumple estas reglas, las propiedades se aplicaran.
+
+```css
+  getStyle() {
+    return `
+      <style>
+      :host {
+        display: inline-block;
+        width: 100%;
+        min-width: 300px;
+        max-width: 400px;
+        font-size: 20px;
+        background: gray;
+      }
+
+      :host(.blue) {
+        background: blue;
+      }
+
+      :host([yellow]) {
+        background: yellow;
+      }
+
+      </style>
+    `;
+  }
+```
+
+Tambien podemos dar contexto a host y agregar estilos:
+
+```css
+  getStyle() {
+    return `
+      <style>
+      :host-context(article.card) {
+        display: block;
+        max-width: 100%;
+        padding: 10px;
+        background: red;
+      }
+      </style>
+    `;
+```
+
+Cada clon de nuestro compenente es una instancia del mismo el cual se puede personalizar de acuerdo a nuestra necesidad. Si queremos aplicar estilos a los elementos dentro de cada componente, basta con aplicar selectores de css:
+
+```css
+:host([yellow]) {
+  background: yellow;
+}
+
+:host([yellow]) h1 {
+  color: grey;
+}
+
+:host([yellow]) p {
+  color: black;
+}
+
+:host([yellow]) h1,
+:host([yellow]) p {
+  font-size: 20px;
+}
+```
+
+## **:slotted**
+
+Con el pseudoelemento slotted podemos dar estilos directamente a los elementos que se incrustaran en el slot, este pseudoelemento solo se puede utilizar cuando tenemos el shadowDOM:
+
+```css
+  getStyle() {
+    return `
+      <style>
+        ::slotted(span) {
+          font-size: 30px;
+          color: red;
+        }
+
+        ::slotted(.texto) {
+          color: blue;
+        }
+      </style>
+    `;
+  }
+```
+
+## **CSS custom properties**

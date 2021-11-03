@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Components</title>
+  </head>
+  <body>
+    <h2>Soy un titulo</h2>
+    <my-element>
+      <span slot="titulo">Hola desde un componente 1</span>
+      <span slot="parrafo">Soy texto ejemplo</span>
+    </my-element>
+
+    <my-element class="blue">
+      <span slot="titulo">Hola desde un componente 2</span>
+      <span slot="parrafo">Soy texto ejemplo</span>
+    </my-element>
+
+    <my-element yellow>
+      <span slot="titulo">Hola desde un componente 3</span>
+      <span slot="parrafo">Soy texto ejemplo</span>
+    </my-element>
+
+    <article class="card">
+      <my-element yellow>
+        <span slot="titulo">Hola desde un componente 3</span>
+        <span slot="parrafo">Soy texto ejemplo</span>
+      </my-element>
+    </article>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
