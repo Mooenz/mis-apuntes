@@ -1,0 +1,15 @@
+{
+  "name": "plazi-media-player",
+  "version": "1.0.0",
+  "description": "Proyecto del Curso Profesional de JavaScript",
+  "main": "index.js",
+  "keywords": ["platzi"],
+  "author": "Jose Manuel Montaño Saenz <joss92821@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "live-server"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}
