@@ -86,3 +86,48 @@ Para que esto no suceda podemos otorgar una atributo async, permitiendo que la p
 _Que pasa si tengo dos scripts asincronos_, si tenemos un script pequeño y otro mucho mas grande y complejo, pues ambas peticiones salen pero no quiere decir que se contesten a la vez, el script pequeño al resolverse mas rapido, se ejecutara paralizando el procesamiento del DOM. Para el script mas complejo, este se ejecutara al terminar su peticion, el cual ocurre en cualquier momento.
 
 _defer_, es un atributo que va diferir la ejecucion del JavaScript hasta el final, parecido al async solo que defer permite realizar la peticion asincrona mente y su ejecucion se realizara al final del procesamiento del DOM.
+
+## **Scope**
+
+Representa el tiempo de vida en el que esta existe, puede ser una variable definida o le argumento de una funcion. Es importante ya que evitamos sobrescribir variables existentes:
+
+_Scope Global_ Toda variable que declaremos fuera de una funcion o fuera de un bloque va quedar en el scope global y ese scope es window (cuando programamos para la web).
+
+_Scope Function_ Variables que viven dentro de una funcion y puede ser utilizadas solo dentro de ella.
+
+_Scope Block_ Las variables solo viviran en el bloque de codigo que fue definido. Las keywords LET y CONST trabajan con este scope, por esto es recomendable declarar variables con estas dos keywords.
+
+_Scope Module_ Son las variables que existen en los diferentes modulos que componen una aplicacion.
+
+## **Closures**
+
+Es la combinacion de scope y funciones, permitiendo la creacion de variables privadas puesto que no es un concepto nativo de JavaScript. Ejemplo:
+
+```js
+function makeCouter(n) {
+  let count = n;
+
+  return {
+    increase: function () {
+      count = count + 1;
+    },
+
+    decrease: function () {
+      count = count - 1;
+    },
+
+    getCount: function () {
+      return count;
+    },
+  };
+}
+
+let counter = makeCouter(8); //Crea un nuevo scope de la funcion makeCounter
+
+counter.increase(); // 9
+counter.decrease(); // 8
+counter.decrease(); // 7
+counter.getCount(); // 7
+```
+
+Esta tecnica permite crear valores predefinidos y crear nuevas funciones que interactuen con las variables privadas permitiendo restringir su uso. Los clousers es la tecnica mas utilizada para el desarrollo en JavaScript.
