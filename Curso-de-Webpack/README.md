@@ -353,3 +353,147 @@ y estas variables las colocamos en el src de las imagenes:
 ```
 
 Para finalizar corremos el comando: `webpack --mode development`, esto se hace para generar el compilado de los archivos y ver los cambios que generamos. Si visualizamos las imagenes generadas, lo nombre de estas son reemplazadas por hashes.
+
+## **Loaders de fuentes**
+
+Lo mas recomendable es incorporar las fuentes utilizadas en nuestro proyecto ya que es consume muchos recursos hacer el llamado de estas.
+
+En nuestro archivo de css importamos desde nuestro proyecto la fuente que utilizaremos:
+
+```css
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('../assets/fonts/ubuntu-regular.woff2') format('wolf2'), url('../assets/fonts/ubuntu-regular.woff')
+      format('wolf');
+  font-weight: 400;
+  font-style: normal;
+}
+```
+
+Con nuestra font lista procedemos a instalar un nuevo loader, `npm install url-loader file-loader -D` y configurar nuestro webpack y agregamos una nueva regla:
+
+```js
+ module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.css|.styl$/i,
+        use: [MiniCssExtractPlugin.loader,
+          'css-loader',
+          'stylus-loader'
+        ],
+      },
+      {
+        test: /\.png/,
+        type: 'asset/resource'
+      },
+           {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i, //Expresion regular buscara los tipos de archivos para fuentes
+        type: 'asset/resource', //nos permite determinar el tipo de archivo que será enlazado o cargado
+        generator: {
+          filename: 'assets/fonts/[hash][ext]', // Donde será mapeados los archivos
+        },
+      },
+    ]
+  },
+```
+
+Por ultimo desplegamos para produccion.
+
+## **Optimización: hashes, compresión y minificación de archivos**
+
+Usamos webpack con el fin de optimizar nuestro proyecto comprimir nuestro css, js y demas recursos que estemos utilizando.
+
+instalaremos algunas dependencias para realizar estas compresiones:
+
+`npm install css-minimizer-webpack-plugin -D` //Minimiza nuestro css
+`npm install terser-webpack-plugin -D` // Minimiza nuestro js
+
+Configuramos nuestro webpack.config.js:
+
+```js
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin'); 
+const TerserPlugin = require('terser-webpack-plugin');
+//LLamamos los plugins recientemente instalados
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js', //
+    assetModuleFilename: 'assets/images/[hash][ext][query]'
+  },
+  resolve: {
+    extensions: ['.js']
+  },
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
+      },
+      {
+        test: /\.css|.styl$/i,
+        use: [MiniCssExtractPlugin.loader,
+          'css-loader',
+          'stylus-loader'
+        ],
+      },
+      {
+        test: /\.png/,
+        type: 'asset/resource'
+      },
+      {
+        test: /\.(woff|woff2)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            mimetype: "application/font-woff",
+            name: "[name].[contenthash].[ext]",
+            outputPath: "./assets/fonts/",
+            publicPath: "./assets/fonts/",
+            esModule: false,
+          },
+        }
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: './public/index.html',
+      filename: './index.html'
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'assets/[name].[contenthash].css'
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "src", "assets/images"),
+          to: "assets/images"
+        }
+      ]
+    })
+  ],
+  optimization: { //Agregamos un nuevo apartado
+    minimize: true, //habilitamos la compresion de css
+    minimizer: [ //Creamos instancias de cada plugin para ser utilizados
+      new CssMinimizerPlugin(), // Instancia que comprime css
+      new TerserPlugin(), //Instancia que comprime js
+    ]
+  }
+}
+```
+
+
