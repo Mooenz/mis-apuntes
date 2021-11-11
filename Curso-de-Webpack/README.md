@@ -410,15 +410,15 @@ Por ultimo desplegamos para produccion.
 
 Usamos webpack con el fin de optimizar nuestro proyecto comprimir nuestro css, js y demas recursos que estemos utilizando.
 
-instalaremos algunas dependencias para realizar estas compresiones:
+Instalaremos algunas dependencias para realizar estas compresiones:
 
 `npm install css-minimizer-webpack-plugin -D` //Minimiza nuestro css
 `npm install terser-webpack-plugin -D` // Minimiza nuestro js
 
-Configuramos nuestro webpack.config.js:
+Configuramos nuestro webpack.config.js agregando un nuevo apartado en la configuracion llamado `optimization` alli crearemos nuevas instancias para los dos plugins instalados anteriormente:
 
 ```js
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin'); 
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 //LLamamos los plugins recientemente instalados
 
@@ -426,11 +426,11 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[contenthash].js', //
-    assetModuleFilename: 'assets/images/[hash][ext][query]'
+    filename: '[name].[contenthash].js', // usamos hashes para nuestros archivos resultantes
+    assetModuleFilename: 'assets/images/[hash][ext][query]',
   },
   resolve: {
-    extensions: ['.js']
+    extensions: ['.js'],
   },
   module: {
     rules: [
@@ -438,19 +438,16 @@ module.exports = {
         test: /\.m?js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.css|.styl$/i,
-        use: [MiniCssExtractPlugin.loader,
-          'css-loader',
-          'stylus-loader'
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'stylus-loader'],
       },
       {
         test: /\.png/,
-        type: 'asset/resource'
+        type: 'asset/resource',
       },
       {
         test: /\.(woff|woff2)$/,
@@ -458,16 +455,212 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: "application/font-woff",
-            name: "[name].[contenthash].[ext]",
-            outputPath: "./assets/fonts/",
-            publicPath: "./assets/fonts/",
+            mimetype: 'application/font-woff',
+            name: '[name].[contenthash].[ext]',
+            outputPath: './assets/fonts/',
+            publicPath: './assets/fonts/',
             esModule: false,
           },
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: './public/index.html',
+      filename: './index.html',
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'assets/[name].[contenthash].css', // usamos hashes para la optimizacion de nuestro proyecto0
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src', 'assets/images'),
+          to: 'assets/images',
+        },
+      ],
+    }),
+  ],
+  optimization: {
+    //Agregamos un nuevo apartado
+    minimize: true, //habilitamos la compresion de css
+    minimizer: [
+      //Creamos instancias de cada plugin para ser utilizados
+      new CssMinimizerPlugin(), // Instancia que comprime css
+      new TerserPlugin(), //Instancia que comprime js
+    ],
+  },
+
+  // optimization: {
+  //   minimize: true //Desde webpack 5 se puede activar de manera automatica
+  // }
+};
+```
+
+luego corremos el comando `webpack --mode development`
+
+## **Webpack Alias**
+
+Creamos alias para los paths que estamos utilizamos e identificar cada elemento y hacer uso de ellos. Los alias nos otorga una mejor legibilidad del codigo y mejor entendimiento del recurso importado.
+
+Para ello crearemos en nuestro archivo de configuracion de webpack los alias que utilizaremos:
+
+```js
+  resolve: {
+    extensions: ['.js'],
+    alias: {
+      '@utils': path.resolve(__dirname, 'src/utils/'), // Alias para la carpeta utils
+      '@templates': path.resolve(__dirname, 'src/templates/'), // Alias para la carpeta templates
+      '@styles': path.resolve(__dirname, 'src/styles/'), // Alias para la carpeta styles
+      '@images': path.resolve(__dirname, 'src/assets/images/'), //alias para la ruta de images
+    },
+  },
+```
+
+compilamos nuestro proyecto y listo.
+
+## **Variables de entorno**
+
+Son variables que hace referencia a un punto especifico de la configuracion de nuestro proyecto que no queremos exponer al publico.
+
+Primero instalamos una dependencia para trabajar las variables de entorno, `npm install dotenv-webpack -D`, creamos un archivo `.env` que contendra estas varias de uso privado, tambien crearemos un archivo `.env-example` que nos indicara cuales son las variables de entorno que utilizaremos.
+
+Dentro del archivo `.env` colocamos las variables de entorno que requiramos y en `.env-example` las inicializamos pero sin ningun valor.
+
+Luego hacemos uso de nuestro plugin en la configuracion de webpack:
+
+```js
+const Dotenv = require('dotenv-webpack');
+
+plugins: [
+  new HtmlWebpackPlugin({
+    inject: true,
+    template: './public/index.html',
+    filename: './index.html',
+  }),
+  new MiniCssExtractPlugin({
+    filename: 'assets/[name].[contenthash].css',
+  }),
+  new CopyPlugin({
+    patterns: [
+      {
+        from: path.resolve(__dirname, 'src', 'assets/images'),
+        to: 'assets/images',
+      },
+    ],
+  }),
+  new Dotenv(), // Anadimos este nuevo elemento
+];
+```
+
+Para hacer uso de la variable de entorno utilizamos un modulo de Node.js llamado `process`:
+
+```js
+const API = process.env.API;
+```
+
+Normalmente las variables de entorno son usadas para ocultar informacion sensible o privada. Ya por ultimo compilamos el proyecto para verificar los cambios.
+
+## **Webpack en modo desarrollo**
+
+Para el modo desarrollo debemos tener un archivo aparte llamado `webpack.config.dev.js`, simplemente lo editamos y nos aseguramos que las configuraciones establecidas tengan como fin que todo funcione correctamente.
+
+Para nuestro proyecto quitaremos la configuracion `optimization` y sus plugins, tambien le decimos a webpack que este archivo es para el modo desarrollo:
+
+```js
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js',
+    assetModuleFilename: 'assets/images/[hash][ext][query]',
+  },
+  mode: 'development', // Indicamos a webpack que este archivo es de modo de desarrollo
+  resolve: {
+    extensions: ['.js'],
+    alias: {
+      '@utils': path.resolve(__dirname, 'src/utils/'),
+      '@templates': path.resolve(__dirname, 'src/templates/'),
+      '@styles': path.resolve(__dirname, 'src/styles/'),
+      '@images': path.resolve(__dirname, 'src/assets/images/'),
+    },
+  },
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.css|.styl$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'stylus-loader'],
+      },
+      {
+        test: /\.png/,
+        type: 'asset/resource',
+      },
+      {
+        test: /\.(woff|woff2)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            mimetype: 'application/font-woff',
+            name: '[name].[contenthash].[ext]',
+            outputPath: './assets/fonts/',
+            publicPath: '../assets/fonts/',
+            esModule: false,
+          },
+        },
+      },
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: './public/index.html',
+      filename: './index.html',
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'assets/[name].[contenthash].css',
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src', 'assets/images'),
+          to: 'assets/images',
+        },
+      ],
+    }),
+    new Dotenv(),
+  ],
+};
+```
+
+Configuramos un script en el `package.json` de la siguiente forma: `"dev": "webpack --config webpack.config.dev.js"`
+
+## **Webpack en modo produccion**
+
+El modo produccion es para limpiar todo nuestro codigo y tenerlo listo para ser enviado a produccion.
+
+Instalamos un plugin que nos ayudara a realizar este proceso, `npm install clean-webpack-plugin -D`.
+
+Configuramos nuestro archivo `webpack.config.js`:
+
+```js
+const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // hacemos una destructuracion del plugin.
+
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
@@ -484,16 +677,54 @@ module.exports = {
           to: "assets/images"
         }
       ]
-    })
+    }),
+    new Dotenv(),
+    new CleanWebpackPlugin(), // creamos una instancia deñ plugin
   ],
-  optimization: { //Agregamos un nuevo apartado
-    minimize: true, //habilitamos la compresion de css
-    minimizer: [ //Creamos instancias de cada plugin para ser utilizados
-      new CssMinimizerPlugin(), // Instancia que comprime css
-      new TerserPlugin(), //Instancia que comprime js
-    ]
-  }
-}
 ```
 
+configuramos un script en `package.json` con el siguiente comando: `"build": "webpack --mode production --config webpack.config.js"`, asi garantizamos que para cada modo tiene su archivo de configuracion.
 
+## **Webpack Watch**
+
+Este modo escucha los cambio del proyecto y hace una compilacion automatica, vamos a la configuracion de modo de desarrollo y agregamos un nuevo modulo de configuracion:
+
+```js
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js',
+    assetModuleFilename: 'assets/images/[hash][ext][query]',
+  },
+  mode: 'development',
+  watch: true, //activamos el watch en la configuracion para desarrollo
+  resolve: {
+    extensions: ['.js'],
+    alias: {
+      '@utils': path.resolve(__dirname, 'src/utils/'),
+      '@templates': path.resolve(__dirname, 'src/templates/'),
+      '@styles': path.resolve(__dirname, 'src/styles/'),
+      '@images': path.resolve(__dirname, 'src/assets/images/'),
+    },
+  },
+};
+```
+
+Cuando activemos este modo desde el script de `package.json` la compilacion de modo de desarrollo quedara en un bucle infinito ya que estara pendiente de cada cambio que tenga nuestro proyecto.
+
+Tambien podemos activar este watch con el flag `--watch`.
+
+Es recomendable ejecutar esta funcion en modo de desarrollo puesto que en el modo de produccion tendremos problemas de rendimiento ya que dependiendo del tamaño que tenga nuestro proyecto, asi mismo de demorará.
+
+## **Deploy a Netlify**
+
+Obviamente debemos tener una cuenta en netlify y estar conectada a nuestro repositorio donde este alojado el proyecto.
+
+Creamos nuestra configuracion para netlify en un archivo llamado `netlyfy.toml`:
+
+```bash
+[build]
+publish = "dist"
+command = "npm run build"
+```
