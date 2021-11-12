@@ -1,4 +1,4 @@
-/* ANTES
+// ANTES
 function saludar(nombre) {
   console.log(`Hola ${nombre}`);
   
@@ -17,7 +17,7 @@ module.exports = {
   tarde: 'Buenas Tardes',
   noche: 'Buenas Noches',
 };
-*/
+
 
 //ECMAScript 6
 function saludar(nombre) {

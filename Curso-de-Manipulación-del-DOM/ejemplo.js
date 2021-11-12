@@ -1,4 +1,3 @@
-/*
 //Leer Nodos
 //ANTES
 // Llamamos el elemento html que contenga cierto ID
@@ -147,7 +146,7 @@ document.body.addEventListener('click', mostrarMensaje);
 contenedor.addEventListener('click', mostrarMensaje);
 parrafo.addEventListener('click', mostrarMensaje);
 //Event delegation
-*/
+
 
 const accion = (ev) => {
   if (ev.target.id === 'titulo__main') {

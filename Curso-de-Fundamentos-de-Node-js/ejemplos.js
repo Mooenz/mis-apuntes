@@ -1,4 +1,4 @@
-/*
+
 // Monohilo: implicaciones en diseño y seguridad
 // Se ejecutara infinitamente
 setInterval(() => {
@@ -702,4 +702,3 @@ asincrona(function(err, dato) {
 });
 
 console.log('Yo si me ejecuto correctamente');
-*/
