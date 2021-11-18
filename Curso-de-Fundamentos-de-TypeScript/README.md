@@ -25,11 +25,11 @@ Con typescript logramos:
 - Es un proyecto suprema mente activo ya que es open source.
 - Tiene actualizaciones periodicas.
 
-Según un estudio usando TypeScript en nuestro proyectos podemos tener hasta un 15% menos de bugs
+Según un estudio usando TypeScript en nuestro proyectos podemos tener hasta un 15% menos de bugs.
 
 ## **Compilador TypeScript**
 
-Instalamos el compilador `npm install -g typescript` y al terminar ejecutamos `tsc -v` para saber su version y si esta bien instalado
+Instalamos el compilador `npm install -g typescript` y al terminar ejecutamos `tsc -v` para saber su version y si esta bien instalado.
 
 ### **Como usamos el compilador**
 
@@ -38,3 +38,254 @@ Los archivos .ts son los archivos escritos es TypeScript y se ejecutan con el co
 En este punto podemos ejecutar este archivo resultante con node de la siguiente manera `node nombreArchivo.js`.
 
 Para simplificar este proceso podemos agregar un observador de cambios en cierto archivo TypeScript, el comando `tsc --watch nombreArchivo.ts` activa este observador y compilando cada vez que se haga un cambio en el archivo .ts.
+
+## **El archivo de configuración de TypeScript**
+
+El tsconfig.json permite especificar la raiz de nuestro archivos ts para nuestro proyecto, permite configurar las diferentes opciones que seran enviada al compilador de ts. Inicializamos el proyecto con
+`tsc --init` no enviara un mensaje que confirmara la creacion del archivo de configuracion.
+
+El archivo de configuracion de tsc consta de un objeto json con un atributo llamado compilerOptions.
+
+Este objeto tiene atributos de configuracion como en el caso de target que nos permite elegir la version de ecmascript.
+
+El atributo module nos habilita la opcion de usar modulos en nuestro proyecto, y puede recibir como valores none, amd, system y comonjs.
+
+Atributo strict habilita mediante un valor booleano si se debe usar tipos estrictos.
+
+Atributo removeComments indica mediante un valor booleano si se debe eliminar o no los comentarios realizados en nuestro codigo.
+
+Otro objeto de configuraciones es include, contiene un lista de declaraciones de tipo que albergara las rutas de todos los archivos que seran parte de los archivos procesados por le compilador.
+
+objeto de configuraciones exclude es equivalente a include pero podemos excluir directorios para no ser tomados en cuenta en el proceso de compilacion.
+
+Extends es otro objeto de configuracion donde permite la herencia de configuracion de otro archivo de configuracion.
+
+compileOnSave, recibe un valor booleano que habilita la compilacion automatica al guardar los cambios de nuestro archivo ts.
+
+de que manera podemos aprovechar la existencia de un archivo de configuracion de ts:
+
+`tsc` Le indicamos a ts que busque el archivo de configuracion y lo use.
+
+`tsc --project archivots` Especificamos que queremos hacer uso de este archivo de configuracion.
+
+`tsc file.ts` Omitimos el uso del archivo de configuracion.
+
+## **Tipado en TypeScript**
+
+### **Explicito**
+
+Variables de manera explicita osea que debemos tener en cuenta el tipo de dato cuando se declara.
+
+### **Inferido**
+
+TypeScript puede deducir o inferir el tipo de dato dependiendo del valor asignado a esta variable.
+
+### **Usos del tipado**
+
+Para el tipo de dato explicito debemos usar la notacion posfija: `nombre de la variable : tipo de dato`.
+
+Para el caso de tipo inferido debemos tener en cuenta el nombre de la variable y el valor inicial, dependiendo de este valor typescript tomara la decision que tipo de dato es: `nombre de la variable = valor`
+
+### **Tipos basicos de TypeScript**
+
+Para que todo funcione trabajamos con tipos de datos mas simples de JavaScript como valor numericos, booleanos o strings, entre otros.
+
+Con TypeScript tenemos tipos basicos que son primitivos como:
+
+- Tuple
+- Enum
+- Any
+- Void
+- Never
+
+## **Number, Boolean y String**
+
+Tipo number podemos definir valores numericos o de punto flotante, pero a partir de EcmaScript 2015 podemos usar numeros hexadecimales, octal y valores binarios.
+
+```ts
+//Number
+//Explicito
+let phone: number;
+phone = 1;
+phone = 32054897451;
+// phone = 'Hola'; // Da error ya que vscode esta optimizado para ts no permite asignar strings a variables de tipo number
+
+//Inferido
+let phoneNumber = 32054897451;
+// phoneNumber = true; //Da un erro por no ser el tipo de dato correcto
+
+let hex: number = 0xf00d; //Hexadecimal, inicia con 0x - luego el numero hexadecimal, numero entre 0-9 y letras a-f
+let binary: number = 0b1010; //binario, inicia con 0b - luego el numero binario, acepta numero de entre 0-1
+let octal: number = 0o1237; // octal, inicial con 0o - luego el numero octal, acepta numero entre 1-7.
+```
+
+Tipo boolean es tipo de dato mas simple ya que solo tiene dos valores que indican que algo es verdadero o falso con las palabras reservadas `true` o `false`
+
+```ts
+//Boolean
+//Explicito
+let isPro: boolean = true;
+// isPro = 1; //Da error tipo de dato
+
+// inferido
+let isUserPro = false;
+isUserPro = true;
+// isUserPro = 12; //Da error tipo de dato
+```
+
+Tipo String son datos textuales o cadenas, podemos usar como en js comillas simples '', dobles "" y invertidas o template literal``.
+
+```ts
+//String
+//Explicito
+let username: string = 'Jose Manuel';
+username = 'manu';
+// username = true; //Erro tipo de dato
+
+//inferido
+let nombre = 'Jose Manuel';
+nombre = 'Jose Manuel Montaño Saenz';
+
+//Template
+let userInfo: string;
+userInfo = `
+  user info:
+  userName: ${username}
+  firstName: ${username} montaño
+  phone: ${phone}
+  isPro: ${isPro}
+
+`;
+
+console.log('userInfo:' + userInfo);
+```
+
+## **Any**
+
+Es un tipo de dato que se usa cuando se pretende capturar datos dinamicos o esperamos que una variable vaya a cambiar de tipo en algun momento en futuro.
+
+```ts
+// Explicito
+let idUser: any;
+idUser = 1; //Number
+idUser = '1'; //String
+console.log('idUser:', idUser);
+
+// Inferido
+let otherId;
+otherId = 1;
+otherId = '1';
+console.log('otherId:', otherId);
+```
+
+No es recomendable usar el tipo de dato any ya que podemos tener un error en tiempo de ejecucion. Solo deberiamos de usarlo para el llamado de APIs externas o librerias de terceros. No se debe usar como un tipo de datos predeterminado.
+
+## **Void y never**
+
+_Void_ es un tipo de dato opuesto a any, representa la ausencia de tipo y es usada comunmente como tipo de retorno en funciones.
+
+```ts
+//Explicito
+function showInfo(user: any): any {
+  console.log('user info:', user.id, user.userName, user.firstName);
+
+  // return 'hola';
+}
+
+showInfo({ id: 1, userName: 'Mooenz', firstName: 'Manu' });
+
+//Inferido
+function showFormattedInfo(user: any) {
+  //TypeScript intuye que el retorno de esta funcion es de tipo void
+  console.log(
+    'User Info',
+    `
+    id: ${user.id}
+    userName: ${user.userName}
+    firstName: ${user.firstName}
+  `
+  );
+}
+
+showFormattedInfo({ id: 1, userName: 'Mooenz', firstName: 'Manu' });
+
+//tipo void, como tipo de dato en un variable
+let unusable: void;
+unusable = null;
+unusable = undefined;
+//Hacer estas asignaciones son posibles siempre y cuando el archivo de configuracion tenga explicito que uso estricto de ts este deshabilitado.
+```
+
+Para void tenemos subtipos como null o undefined.
+
+_Never_ es un tipo de dato que representa un valor que nunca ocurre o nunca se da en nuestro codigo.
+
+Se utiliza cuando una funcion lanza una excepcion o cuando la funcion tiene un ciclo infinito y no permite que se finalice.
+
+```ts
+function handleError(code: number, message: string): never {
+  // Process your code here
+  // Generate a message
+
+  throw new Error(`${message}. Code: ${code}`);
+}
+
+try {
+  handleError(404, 'Not Found');
+} catch (error) {}
+
+function sumNumbers(limit: number): never {
+  let sum = 0;
+
+  while (true) {
+    sum++;
+  }
+}
+
+sumNumbers(5);
+```
+
+En conclusión, void es un tipo de dato usado para tipar el retorno de las funciones ya que Predeterminadamente es any indicando que cualquier cosa se retornara. Never se usa con el mismo fin pero con la diferencia que no esperamos ningun resultado de dicha funcion.
+
+## **null y undefined**
+
+Los valores null y undefined son usados como tipos en TypeScript, osea que podemos declara variables con estos dos tipos.
+
+```ts
+// Null
+// Explicita
+let nullVariable: null;
+nullVariable = null;
+// nullVariable = 1; // Error de tipo
+
+// inferido
+let otherVariable = null; // Por defecto indica que la variable es de tipo any
+otherVariable = 'test';
+
+console.log({ nullVariable, otherVariable });
+
+// Undefined
+// Explicito
+let undefinedVariable: undefined = undefined;
+// undefinedVariable = 'test'; // Error de tipo de dato
+
+// Inferido
+let otherUndefined = undefined; // Por defecto indica que la variable es de tipo any
+otherUndefined = 1;
+
+console.log({ undefinedVariable, otherUndefined });
+```
+
+Null y Undefined tambien se puede considerar subtipo de cualquier tipo basico de dato, osea, que se puede reasignar null y undefined a variables de tipo string o number.
+
+```ts
+let albumName: string;
+// albumName = null; // Error de tipo
+// albumName = undefined; // Error de tipo
+```
+
+_Opcion --strictNullChecks_ permite asignar null y undefined a variables de tipo any o sus tipos respectivos. Ademas nos ayuda a evitar errores comunes en programacion en el amito de JavaScript.
+
+este flag se usa `tsc src/type-null-undefined.ts --stricNullChecks` y hace un reporte de todas las lineas donde se produce este error de tipo de dato.
+
+Tambien podemos hacerlo automaticamente en nuestro archivo de configuracion de tsconfig.json, `"strictNullChecks": true,`.
