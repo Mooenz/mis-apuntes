@@ -289,3 +289,158 @@ _Opcion --strictNullChecks_ permite asignar null y undefined a variables de tipo
 este flag se usa `tsc src/type-null-undefined.ts --stricNullChecks` y hace un reporte de todas las lineas donde se produce este error de tipo de dato.
 
 Tambien podemos hacerlo automaticamente en nuestro archivo de configuracion de tsconfig.json, `"strictNullChecks": true,`.
+
+## **Object**
+
+Este tipo de dato se considera siempre y cuando no tengamos un tipo primitivo.
+
+```ts
+let user: object;
+user = {};
+
+user = {
+  id: 1,
+  username: 'Mooenz',
+  firstName: 'Jose Manuel',
+  isPro: true,
+};
+
+console.log({ user }); // Muestra el objeto
+
+console.log(user.username); // Da error, no se puede acceder a las propiedades de este objeto.
+```
+
+### **Object Vs object**
+
+Los objetos de javaScript(Object) son instancias de `Object.prototype` y hereda todas las propiedades de el, permitiendo el uso de tipos de datos primitivos, acceder a sus propiedades y de mas propiedades, esto quiere decir que el tipo de dato object no es una instancia de `Object.prototype`.
+
+```ts
+//Object vs object (clase Js vs tipo TS)
+const myObj = {
+  //TypeScript considera este objeto como una instancia de Object.prototype
+  id: 1,
+  username: 'Mooenz',
+  firstName: 'Jose Manuel',
+  isPro: true,
+};
+
+const isInstance = myObj instanceof Object; // Aqui comprobamos que si es una instancia de Object
+console.log(isInstance); // Da true
+
+console.log(myObj.username); // Muestra usuario
+```
+
+## **Array**
+
+Para los arreglos al igual que en JavaScript, TypeScript permite definir una variable para almacenar o gestionar un conjunto de datos, podemos utilizar dos notaciones, con corchetes`[]` o uso de los genericos via la clase de array `Array<TIPO>`.
+
+```ts
+// Explicito
+let users: string[];
+
+users = ['Colombia', 'Mexico', 'Argentina', 'España'];
+// users = [1, true, 'test']; // Error tipo de dato
+
+//Inferidos
+let otherUser = ['Colombia', 'Mexico', 'Argentina', 'España'];
+// otherUser = [1, true, 'test'];// Error tipo de dato
+
+//Array<TIPO>
+let pictureTitles: Array<string>;
+
+pictureTitles = ['Atardecer', 'Vacation Time', 'Landscape'];
+
+//Accediendo a los valores de un Array
+console.log('first user:', users[0]);
+console.log('first title:', pictureTitles[0]);
+
+// Propiedades en Array
+// Tamaño del arreglo
+console.log('El tamaño del arreglo es:', users.length);
+//Agregar nuevo dato
+users.push('Peru');
+users.sort();
+console.log('users:', users);
+```
+
+## **Tupla**
+
+Permite representar o expresar un conjunto de valores utilizando la sintaxis de los arreglos, las unicas restriccion es que los tipos de datos sean diferente para cada una de las posiciones, y el numero de elementos sea fijos.
+
+```ts
+export {};
+
+// [1, 'user']
+let user: [number, string];
+user = [1, 'Mooenz'];
+
+console.log({ user });
+console.log('id:', user[0]);
+console.log('name:', user[1]);
+
+// Tuplas con varios valores
+// id, username, isPro
+let userInfo: [number, string, boolean];
+userInfo = [2, 'Mooenz', true];
+console.log({ userInfo });
+
+// Arreglo de Tuplas
+let array: [number, string][] = [];
+array.push([1, 'Mooenz']);
+array.push([2, 'Jmanu21']);
+array.push([3, 'Jmanuel21']);
+console.log({ array });
+
+// Uso de funciones Array
+// Jmanuel21 => Jmanuel2108
+
+array[2][1] = array[2][1].concat('08');
+console.log({ array });
+```
+
+## **Enum**
+
+Los enumerados permite definir un conjunto de valores con nombre que casi siempre son valores numericos.
+
+Permiten asignar un nombre amigable para valor numericos que se adaptan al contexto de nuestra aplicacion.
+
+```ts
+// Orientacion para fotografias
+// const landscape = 0;
+// const potrait = 1;
+// const squate = 2;
+// const panorama = 3;
+
+// El ejemplo anterior es igual a lo que escribiremos a continuacion:
+enum PhotoOrientation {
+  Landscape = 0,
+  Portrait = 1,
+  Square = 2,
+  Panorama = 3,
+}
+
+const landscape: PhotoOrientation = PhotoOrientation.Landscape;
+console.log({ landscape }); // landscape: 0
+console.log('landscape', PhotoOrientation[landscape]); // landscape Landscape
+
+enum PictureOrientation {
+  Landscape = 10,
+  Portrait, // 11
+  Square, // 12
+  Panorama, // 13
+}
+console.log('portrait', PictureOrientation.Portrait); // 11
+
+enum Country {
+  Bolivia = 'bol',
+  Colombia = 'col',
+  Mexico = 'mex',
+  UnitedState = 'usa',
+  España = 'esp',
+}
+
+const country: Country = Country.Colombia;
+console.log({ country }); // col
+```
+
+El uso de numerados cuando consideramos valores limitados, podemos usarlo en colores, dias de la semana o meses de años.
