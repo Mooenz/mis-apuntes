@@ -1,0 +1,113 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100%;
+  background-color: #111;
+  padding: 20px;
+}
+
+.contenedor {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-auto-flow: column;
+  grid-template-areas: 
+  "one six six"
+  "seven seven four"
+  "three five two";
+  gap: 20px;
+
+}
+
+.item {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.number {
+  border-radius: 50%;
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  padding: 20px;
+  height: 80px;
+  width: 80px;
+  transition-duration: 1s;
+}
+
+.number:hover {
+  transform: scale(1.5);
+  transition-duration: 1s;
+}
+
+.green-one {
+  background: #10ac84;
+  grid-area: two;
+}
+
+.green-two {
+  background: #1dd1a1;
+}
+
+.purple-one {
+  background: #341f97;
+  grid-area: one;
+}
+
+.purple-two {
+  background: #5f27cd;
+}
+
+.red-one {
+  background: #ff4757;
+  grid-area: three;
+}
+
+.red-two {
+  background: #ff6b81;
+}
+
+.pink-one {
+  background: #e84393;
+  grid-area: six;
+}
+
+.pink-two {
+  background: #fd79a8;
+}
+
+.yellow-one {
+  background: #fdcb6e;
+  grid-area: five;
+}
+
+.yellow-two {
+  background: #ffeaa7;
+}
+
+.navi-one {
+  background: #0a3d62;
+  grid-area: four;
+}
+
+.navi-two {
+  background: #3c6382;
+}
+
+.blue-one {
+  background: #0984e3;
+  grid-area: seven;
+}
+
+.blue-two {
+  background: #74b9ff;
+}
