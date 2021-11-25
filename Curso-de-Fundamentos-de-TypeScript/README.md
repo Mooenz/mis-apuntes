@@ -444,3 +444,144 @@ console.log({ country }); // col
 ```
 
 El uso de numerados cuando consideramos valores limitados, podemos usarlo en colores, dias de la semana o meses de años.
+
+## **Unión de Tipos, Alias y Tipos Literales**
+
+TypeScript permite juntar diferentes tipos de datos mediante el simbolo pipe "|".
+
+```ts
+// La aplicacion soporta numero y stings como id
+let idUserUno: number | string;
+
+idUserUno = 10;
+idUserUno = '10';
+
+//Buscar username dado un id
+function getUsernameById(id: number | string) {
+  //logica de negocio
+  return 'mooenz';
+}
+
+getUsernameById(20);
+getUsernameById('20');
+```
+
+Para no tener un poco mas de orden al crear combinaciones de tipos de datos, typescript permite dar un alias a esta combinacion. Usando la palabra reservada 'type' creamos el alias.
+
+```ts
+type ideUserDos = number | string;
+type userNameUno = string;
+let idUserDos: ideUserDos;
+
+idUserDos = 10;
+idUserDos = '10';
+
+//Buscar username dado un id
+function getUsernameByIdUno(id: ideUserDos): userNameUno {
+  //logica de negocio
+  return 'mooenz';
+}
+```
+
+Los tipos de datos literales son cadenas de datos que una variable solo puede recibir. Tambien podemos unir estos tipos literales y otorgarle un alias.
+
+```ts
+// 100x100, 500x500, 1000x1000
+type SquareSize = '100x100' | '500x500' | '1000x1000';
+// let smallPicture: SquareSize = '200x200';
+let smallPicture: SquareSize = '100x100';
+let mediumPicture: SquareSize = '500x500';
+```
+
+## **Aserciones de tipo**
+
+TypeScript permite "cambiar" dependiendo de nuestro codigo, el tipo de dato que de nuestras variables, es decir, cuando conocemos mas que TypeScript sobre el valor de una variable podemos decirle al compilador "tranquilo, confia en mi" y "convertir" un tipo de dato a otro, para que este tenga ciertas propiedades que necesitemos.
+
+La asercion es similar al casting de tipos en otro lenguajes y se utiliza de la siguiente forma:
+
+```ts
+export {};
+// <tipo> // Angle Bracket syntax
+let username: any;
+username = 'Mooenz';
+username = 'cata';
+
+// tenemos una cadena, TS confia en mi!
+let message: string =
+  (<string>username).length > 5
+    ? `Welcome ${username}`
+    : `Username is too short`;
+
+console.log({ message });
+
+let usernameWithId: any = 'Mooenz 1';
+// Como obtener el username?
+username = <string>usernameWithId.substring(0, 6);
+console.log({ username });
+
+// Sintaxis "as"
+
+message =
+  (username as string).length > 5
+    ? `Welcome ${username}`
+    : `Username is too short`;
+
+console.log({ message });
+
+let helloUser: any;
+helloUser = 'hello Mooenz';
+username = (helloUser as string).substring(6);
+console.log({ username });
+```
+
+_Que sintaxis usar?_ todo depende de tu proyecto, tu grupo de trabajo o las peticiones de tu cliente.
+
+## **Funciones en TypeScript**
+
+Los parametros de las funciones son tipados, se pueden definir parametro opcionales. El tipo de retorno puede set un tipo básico, enum, alias, tipo literal o una combinacion de ellos.
+
+```js
+// Las funciones en js se crean de la siguiente manera
+function createPicture(title, date, size) {}
+```
+
+Pero en TypeScript esto daria error debido a que los parametros de la funcion no tienen un tipo:
+
+```ts
+// Usamos ts, definimos los tipos para los parametros
+type SquareSize = '100x100' | '500x500' | '1000x1000';
+
+function createPicture(title: string, date: string, size: SquareSize) {
+  // Se crea la fotografia
+  console.log('create Picture using', title, date, size);
+}
+
+createPicture('First date', '07/07/2020', '500x500');
+createPicture('Colombia tetra', '2020-03');
+```
+
+Al llamar nuestra funcion `createPicture()` nos da un error en el segundo llamado, ya que la funcion espera 3 parametros y solo enviamos 2, en este punto utilizaremos parametros opcionales. Los parametros opciones deben ser los ultimos parametros
+
+```ts
+function createOtherPicture(title?: string, date?: string, size?: SquareSize) {
+  // Se crea la fotografia
+  console.log('create Picture using', title, date, size);
+}
+
+createOtherPicture('First date', '07/07/2020', '500x500');
+createOtherPicture('Colombia tetra', '2020-03');
+createOtherPicture('Colombia tetra');
+createOtherPicture();
+```
+
+En TypeScript tambien usamos arrow functions o funciones de flecha, son iguales que en JavaScript pero debemos darles tipos a nuestros parametros.
+
+```ts
+let createpic = (title: string, date: string, size: SquareSize): object => {
+  return { title, date, size };
+};
+
+const picture = createpic('August', '2021-11-25', '1000x1000');
+
+console.log({ picture });
+```
