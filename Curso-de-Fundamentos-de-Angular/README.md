@@ -157,9 +157,9 @@ nombreMetodo(event: Event) {
 
 ## **Data binding con ngModel**
 
-El Data binding es una combinacion entre el event binding y setiar una propiedad. Es catalogado como un enlace de doble via. Para lograr esta combinacion debemos primero configurar una propiedad `[]` y luego colocamos el evento que para este ejemplo sera `(ngModel)`.
+El Data binding es una combinacion entre el event binding y setiar una propiedad. Es catalogado como un enlace de doble via. Para lograr esta combinacion debemos primero configurar una propiedad `[]` y luego colocamos el evento `(ngModel)`.
 
-ngModel es muy beneficioso en lso input ya que esta pendiente si un campo es valido o no, la interaccion de que el usuario tiene con el input y ademas sincroniza el valor.
+ngModel es muy beneficioso en los input ya que esta pendiente si un campo es valido o no, la interaccion de que el usuario tiene con el input y ademas sincroniza el valor.
 
 Para hacer un uso mas correcto de ngModel, habilitaremos el modulo `Angular Forms`, el proceso es el siguiente:
 
@@ -175,7 +175,7 @@ export class AppComponent {
     age: 29,
     avatar: 'https://source.unsplash.com/random',
   };
-
+}
   //hmtl render
 <p>Nombre = {{person.name}}</p>
 <input type="text" [(ngModel)]="person.name" />
@@ -190,7 +190,6 @@ ngModel nos da un estado de si una propiedad es valida o no:
 
 Tambien podemos validar un rango de edad:
 
-
 ```js
 <input type="number" max="18" min="10" #ageInput="ngModel" [(ngModel)]="person.age" />
 <p>Valid {{ageInput.valid}}</p>
@@ -198,9 +197,9 @@ Tambien podemos validar un rango de edad:
 
 Estas validacion se logran gracias a las validaciones nativas de HTML. Angular forms es un paquete muy potente.
 
-## **Uso de (*ngIf)**
+## **Uso de \*ngIf**
 
-ngIf es una estructura de control que funciona facilmente, tenemos un elemento y dentro de el tiene una directiva llamada '*ngIf' junto con la condicional la cual si se cumple pues mostrara el elemento:
+ngIf es una estructura de control que funciona facilmente, tenemos un elemento y dentro de el tiene una directiva llamada '\*ngIf' junto con la condicional la cual si se cumple pues mostrara el elemento:
 
 ```js
  <p *ngIf="condicional"></p>
@@ -216,9 +215,152 @@ export class AppComponent {
     age: 29,
     avatar: 'https://source.unsplash.com/random',
   };
-
+}
   //hmtl render
 <input type="text" required [(ngModel)]="person.name">
-<p *ngIf="person.name === 'mooenz'">Soy Mooenz</p>
+<p *ngIf="person.name === 'mooenz'">Soy Mooenz</p> // Muestra el contenido de la etiqueta p si se cumple la sentencia
 ```
 
+### **Operadores en \*ngIf**
+
+El uso de operadores en esta estructura de control, es suprema mente facil:
+
+```js
+<p *ngIf="person.name === 'manu' && person.age === 29">Soy Mannu</p> // Muestra el contenido de la etiqueta p si se cumple las dos sentencias
+```
+
+\*nhgIf es lo mismo que un if, por ende tambien tiene un bloque de tipo else que se realizaria de la siguiente manera:
+
+```js
+<p *ngIf="person.name === 'manu' && person.age === 29; else myBlock">Soy Mannu</p> // Muestra el contenido de la etiqueta p si se cumple las dos sentencias, si no se cumple muestra la sentencia else que esta dentro de un ng-template
+<ng-template #myBlock>
+  <p>Bloque de else</p>
+</ng-template>
+```
+
+## **Uso de \*ngFor**
+
+ngFor nos permite iterar en un array de elementos. Ejemeplo:
+
+```js
+// Controlador
+export class AppComponent {
+names: string[] = ['Jose', 'Cata', 'Mooenz'];
+}
+newName: string = ''; // Guarda nuevo nombre a agregar
+
+agregarNombre() { //Funcion permite agregar nuevos nombres
+  this.names.push(this.newName); // Agrega el nuevo nombre
+  this.newName = ''; // Limpia el input
+}
+
+eliminarNombre(index: number) { //Funcion que permite eliminar nombres segun su indice
+  this.names.splice(index, 1); //Elimina el nombre segun su indice
+}
+
+// Html render
+<input type="text" required [(ngModel)]="newName"> // Recibe los nuevos nombres
+<button (click)="agregarNombre()">Agregar nombre</button> // boton ejecuta la funcion agregar nombre
+<ul>
+  <li *ngIf="names.length === 0">No hay nombres</li> // li se muestra si el array de nombre esta vacio
+  <li *ngFor="let name of names; index as i"> // ngFor
+    {{i}} {{name}}
+    <button (click)="eliminarNombre(i)">Eliminar</button> //boton ejecuta la funcion eliminar nombre
+  </li>
+</ul>
+```
+
+## **\*ngFor para arrays**
+
+¿Como podriamos renderizar un array de objetos?, bueno en esta ocasion utilizariamos \*ngFor de la siguiente manera:
+
+```js
+// Controlador
+productos = [
+  //Array de objetos
+  {
+    name: 'EL mejor juguete',
+    price: 565,
+    image: './assets/images/toy.jpg',
+    category: 'all',
+  },
+  {
+    name: 'Bicicleta casi nueva',
+    price: 356,
+    image: './assets/images/bike.jpg',
+  },
+  {
+    name: 'Colleción de albumnes',
+    price: 34,
+    image: './assets/images/album.jpg',
+  },
+  {
+    name: 'Mis libros',
+    price: 23,
+    image: './assets/images/books.jpg',
+  },
+  {
+    name: 'Casa para perro',
+    price: 34,
+    image: './assets/images/house.jpg',
+  },
+  {
+    name: 'Gafas',
+    price: 3434,
+    image: './assets/images/glasses.jpg',
+  },
+];
+```
+
+Creamos la estructura que contendra cada objeto en nuestro HTML
+
+```js
+<div>
+  <div *ngFor="let producto of productos"> //Elemento que va iterar
+    <img width="250px" [src]="producto.image" alt="imagen"> // Imagen
+    <h2>{{producto.price}}</h2> // Precio
+    <p>{{producto.name}}</p> // Nombre
+  </div>
+</div>
+```
+
+En este punto podemos agregar las propiedades del tipado en TypeScript y esto lo logramos creando interfaces, creamos un archivo llamado `producto.model.ts` con el siguiente contenido:
+
+```ts
+export interface Producto {
+  name: string;
+  price: number;
+  image: String;
+  category?: string; // La categoria es opcional
+}
+```
+
+lo importamos a nuestro controlador y lo agregamos como un tipo de dato a nuestro array de objetos:
+
+```ts
+ productos: Producto[] = [ // Indicamos cada objeto tiene como interfaz a Productos
+   {'objeto'},
+   {'objeto'},
+ ]
+```
+
+## **Uso de ngSwitch**
+
+ngSwitch se debe usar como property binding en el elemento padre y cada caso deben ser los elementos hijos, ejemplo:
+
+```js
+<h1>ngSwitch</h1>
+<input type="text" required [(ngModel)]="person.name" />
+<div [ngSwitch]="person.name">
+  <p *ngSwitchCase="'Mooenz'">Hola soy Mooenz</p>
+  <p *ngSwitchCase="'Manuel'">Hola soy Manuel</p>
+  <p *ngSwitchCase="'Jose'">Hola soy Jose</p>
+  <p *ngSwitchDefault>No hace match</p>
+</div>
+```
+
+## **Angular Devtools**
+
+es un plugin para chrome que nos ayuda hacer debugging de una manera mucho ms dinamica, podemos anclarla a nuestras stack de extensiones y cuando detecte que una pagina esta hecha con angular, su icono se coloreara de rojo.
+
+Ademas, cuando inspeccionamos paginas hechas con angular nos permite contar con una opcion especial donde estara todos los elementos que componen la app.
