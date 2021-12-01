@@ -14,18 +14,18 @@ Al terminar la instalacion entramos a la carpeta donde se encuentra el nuevo pro
 
 - `ng serve` que ejecuta nuestro proyecto
 - `ng serve -o` Ejecuta el proyecto y abre el navegador
-- `ng serve -o --port=8800`ejecuta el proyecto en el puerto que le indiquemos
+- `ng serve -o --port=8800` ejecuta el proyecto en el puerto que le indiquemos
 - `ng version` nos muestra una informacion mas detallada como las dependencias mas robustas que angular utiliza y sus versiones.
 
 ## **Estructura de un proyecto en Angular**
 
 Como todo proyecto frontend iniciamos con la carpeta principal que es `/src` en ella tenemos nuestro componentes, archivos html, css, el routing, etc. podemos considerarla como el corazon de nuestra aplicacion.
 
-- `.browserlistrc` le indica a angular en que versiones tiene que ser compatible nuestra aplicacion
+- `.browserlistrc` le indica a angular en que versiones de nuestros navegadores debe tener compatibilidad para nuestra aplicacion
 - `.editorconfig` Es una normativa para la configuracion de nuestro editor de codigo, para que sea automatica esta configuracion debemos tener un plugin llamado `EditorConfig`
 - `tsconfig.json` Es la configuracion de TypeScript para nuestro proyecto
 - `angular.json` Permite a angular trabajar en diferentes ambientes, osea, tener ambientes para desarrollo, produccion o QA
-- Si queremos fortalecer el desarrollo de angular debemos contar con el plugin `Angular Language Service` Nos ayuda a corregir multiples errores de configuracion de angular.
+- Si queremos fortalecer el desarrollo de angular debemos contar con el plugin llamado `Angular Language Service` Nos ayuda a corregir multiples errores de configuracion de angular.
 
 - Es recomendado agregar un archivo de configuracion llamando `.nvmrc` podemos indicarle a node version manager que version de node necesitamos para nuestro proyecto.
 
@@ -41,7 +41,7 @@ Dentro de los doble corchetes podemos ejecutar codigo JavaScript:
 
 ```ts
 <h2>{{'Hola mundo'.repeat(2)}}</h2>
-<p> 3 + 3 = {{3 +3}}</p>
+<p> 3 + 3 = {{3 + 3}}</p>
 ```
 
 Angular divide su logica de negocio en renderizado del componente, logica del componente y estilos del componente.
@@ -73,13 +73,14 @@ Esta informacion la podemos renderizar de la siguiente manera:
 <img src={{img}} alt="imagen" width="300px">
 ```
 
-Las variables que se encuentran en la `clase AppComponent` deben ser publicas.
+Las variables que se encuentran en la `clase AppComponent` deben ser publicas, de lo contrario al ser privadas seran inaccesibles.
 
 ## **Property Binding**
 
-Es la forma de modificar el valor atributos desde el controlador de nuestro componente. Para realizar estos cambio debemos colocar el atributo entre corchetes cuadrados"[]" y en valor colocamos la varible que la modificara:
+Es la forma de modificar el valor de atributos desde el controlador de nuestro componente. Para realizar estos cambio debemos colocar el atributo entre corchetes cuadrados"[]" y en valor colocamos la varible que la modificara:
 
-```ts
+```js
+// Datos desde el controlador
 export class AppComponent {
   name = 'Mooenz';
   projects = 24;
@@ -92,8 +93,8 @@ export class AppComponent {
   };
 ```
 
-```ts
-//Traemos los valores desde nuestro controlador
+```html
+<!--Traemos los valores desde nuestro controlador-->
 <button [disabled]="btnDisabled">Hola soy un boton</button>
 
 <input type="text" [value]="person.name" [id]="person.age">
@@ -128,7 +129,7 @@ this.contador -= 1;
 
 En el archivo html colocamos:
 
-```js
+```html
 <p>Contador es igual a: {{contador}}</p>
 <button (click)="aumentar()">Aumentar</button>
 <button (click)="disminuir()">Disminuir</button>
@@ -149,6 +150,7 @@ console.log(element.scrollTop) //mostramos la posicion del scroll
 
 // evento keyUp
 (keyup)="nombreMetodo($event)
+
 nombreMetodo(event: Event) {
     const element = event.target as HTMLInputElement;
     this.person.name = element.value; //igualamos el valor de person.name al valor que ponemos en el input
@@ -199,9 +201,9 @@ Estas validacion se logran gracias a las validaciones nativas de HTML. Angular f
 
 ## **Uso de \*ngIf**
 
-ngIf es una estructura de control que funciona facilmente, tenemos un elemento y dentro de el tiene una directiva llamada '\*ngIf' junto con la condicional la cual si se cumple pues mostrara el elemento:
+ngIf es una estructura de control que funciona facilmente, tenemos un elemento y dentro de el tiene una directiva llamada '\*ngIf' junto con la condicional la cual si se cumple mostrara el elemento:
 
-```js
+```html
  <p *ngIf="condicional"></p>
 ```
 
@@ -225,14 +227,14 @@ export class AppComponent {
 
 El uso de operadores en esta estructura de control, es suprema mente facil:
 
-```js
-<p *ngIf="person.name === 'manu' && person.age === 29">Soy Mannu</p> // Muestra el contenido de la etiqueta p si se cumple las dos sentencias
+```html
+<p *ngIf="person.name === 'manu' && person.age === 29">Soy Mannu</p> <!-- Muestra el contenido de la etiqueta p si se cumple las dos sentencias-->
 ```
 
 \*nhgIf es lo mismo que un if, por ende tambien tiene un bloque de tipo else que se realizaria de la siguiente manera:
 
-```js
-<p *ngIf="person.name === 'manu' && person.age === 29; else myBlock">Soy Mannu</p> // Muestra el contenido de la etiqueta p si se cumple las dos sentencias, si no se cumple muestra la sentencia else que esta dentro de un ng-template
+```html
+<p *ngIf="person.name === 'manu' && person.age === 29; else myBlock">Soy Mannu</p> <!-- Muestra el contenido de la etiqueta p si se cumple las dos sentencias, si no se cumple muestra la sentencia else que esta dentro de un ng-template-->
 <ng-template #myBlock>
   <p>Bloque de else</p>
 </ng-template>
@@ -240,7 +242,7 @@ El uso de operadores en esta estructura de control, es suprema mente facil:
 
 ## **Uso de \*ngFor**
 
-ngFor nos permite iterar en un array de elementos. Ejemeplo:
+ngFor nos permite iterar en un array de elementos. Ejemplo:
 
 ```js
 // Controlador
@@ -257,15 +259,17 @@ agregarNombre() { //Funcion permite agregar nuevos nombres
 eliminarNombre(index: number) { //Funcion que permite eliminar nombres segun su indice
   this.names.splice(index, 1); //Elimina el nombre segun su indice
 }
+```
 
+```html
 // Html render
-<input type="text" required [(ngModel)]="newName"> // Recibe los nuevos nombres
-<button (click)="agregarNombre()">Agregar nombre</button> // boton ejecuta la funcion agregar nombre
+<input type="text" required [(ngModel)]="newName"> <!--Recibe los nuevos nombres-->
+<button (click)="agregarNombre()">Agregar nombre</button> <!--Boton ejecuta la funcion agregar nombre-->
 <ul>
-  <li *ngIf="names.length === 0">No hay nombres</li> // li se muestra si el array de nombre esta vacio
-  <li *ngFor="let name of names; index as i"> // ngFor
+  <li *ngIf="names.length === 0">No hay nombres</li> <!--li se muestra si el array de nombre esta vacio-->
+  <li *ngFor="let name of names; index as i"> <!--ngFor-->
     {{i}} {{name}}
-    <button (click)="eliminarNombre(i)">Eliminar</button> //boton ejecuta la funcion eliminar nombre
+    <button (click)="eliminarNombre(i)">Eliminar</button> <!--Boton ejecuta la funcion eliminar nombre-->
   </li>
 </ul>
 ```
@@ -314,12 +318,15 @@ productos = [
 
 Creamos la estructura que contendra cada objeto en nuestro HTML
 
-```js
+```html
 <div>
-  <div *ngFor="let producto of productos"> //Elemento que va iterar
-    <img width="250px" [src]="producto.image" alt="imagen"> // Imagen
-    <h2>{{producto.price}}</h2> // Precio
-    <p>{{producto.name}}</p> // Nombre
+  <div *ngFor="let producto of productos">
+    <!--Elemento que va iterar-->
+    <img width="250px" [src]="producto.image" alt="imagen" /> // Imagen
+    <h2>{{producto.price}}</h2>
+    <!--Precio-->
+    <p>{{producto.name}}</p>
+    <!--Nombre-->
   </div>
 </div>
 ```
@@ -330,8 +337,8 @@ En este punto podemos agregar las propiedades del tipado en TypeScript y esto lo
 export interface Producto {
   name: string;
   price: number;
-  image: String;
-  category?: string; // La categoria es opcional
+  image: string;
+  category?: string; // '?' significa que categoria es opcional
 }
 ```
 
@@ -348,8 +355,7 @@ lo importamos a nuestro controlador y lo agregamos como un tipo de dato a nuestr
 
 ngSwitch se debe usar como property binding en el elemento padre y cada caso deben ser los elementos hijos, ejemplo:
 
-```js
-<h1>ngSwitch</h1>
+```html
 <input type="text" required [(ngModel)]="person.name" />
 <div [ngSwitch]="person.name">
   <p *ngSwitchCase="'Mooenz'">Hola soy Mooenz</p>
@@ -367,29 +373,49 @@ Ademas, cuando inspeccionamos paginas hechas con angular nos permite contar con 
 
 ## **Class and style**
 
-En angular podemos tener un dinamismo con las clases creadas en nuestro css, tenemos como ejemplo :
+En angular podemos tener un dinamismo con las clases creadas en nuestro css, ejemplo :
 
-```js
-<input type="text" required #nameInput2="ngModel" [(ngModel)]="person.name" />// Desde el ngModel se evalua si es campo esta vacio o no, esto se logra con las validaciones nativas de html
-<p class="message-error" [class.active]="nameInput2.invalid">El campo es requerido</p> //mediante el property binding usamos la sentencia class y activar una clase segun una condiciona, la condicional es la variable nameInput2.invalid
+```html
+<input
+  type="text"
+  required
+  #nameInput2="ngModel"
+  [(ngModel)]="person.name"
+/><!-- Desde el ngModel se evalua si es campo esta vacio o no, esto se logra con las validaciones nativas de html-->
+<p class="message-error" [class.active]="nameInput2.invalid">
+  El campo es requerido
+</p>
+<!-- mediante el property binding usamos la sentencia class y activar una clase segun una condiciona, la condicional es la variable nameInput2.invalid-->
 ```
 
 Tambien mediante un binding podemos agregar estilos en linea:
 
-```js
-<input type="text" required #nameInput3="ngModel" [(ngModel)]="person.name" /> // Validacion nativa desde el html
-<p [style.font-style]="nameInput3.invalid ? 'italic' : 'normal'">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia blanditiis nisi, provident cum molestias ea!</p> // mediante un ternario preguntamos si nameInput3.invalid es valido y de ser correcto style.font-style = 'italic' y si es falso es igual a 'normal'
+```html
+<input type="text" required #nameInput3="ngModel" [(ngModel)]="person.name" />
+<!--Validacion nativa desde el html-->
+<p [style.font-style]="nameInput3.invalid ? 'italic' : 'normal'">
+  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia blanditiis
+  nisi, provident cum molestias ea!
+</p>
+<!-- mediante un ternario preguntamos si nameInput3.invalid es valido y de ser correcto style.font-style = 'italic' y si es falso es igual a 'normal'-->
 ```
 
 otro ejemplo:
 
-```js
+```html
 <div class="container">
   <div>
-    <input type="text"[(ngModel)]="widthImg"> <!--Captura la informacion y modifica el valor de la variable 'widthImg' mediante el ngModel-->
+    <input type="text" [(ngModel)]="widthImg" />
+    <!--Captura la informacion y modifica el valor de la variable 'widthImg' mediante el ngModel-->
   </div>
   <div>
-    <img [style.width.%]="widthImg"[src]="person.avatar" alt="img" width="100" /> <!--aplica el nuevo valor de 'widthImg' mediante el binding style, permitiendo agregar un nuevo width ya sea en porcentaje u otra unidad de medida-->
+    <img
+      [style.width.%]="widthImg"
+      [src]="person.avatar"
+      alt="img"
+      width="100"
+    />
+    <!--aplica el nuevo valor de 'widthImg' mediante el binding style, permitiendo agregar un nuevo width ya sea en porcentaje u otra unidad de medida-->
   </div>
 </div>
 ```
@@ -399,3 +425,103 @@ _Ojo_ los template se puede usar despues de ser declaradas, esto quiere decir qu
 El uso de clases dinamicas y estilos en linea es recomendable usar otro tipo de soluciones ya que estas estan limitadas al uso de templates que hace seguimiento a las variables.
 
 ## **NgClass y NgStyle**
+
+Son dos directivas que sirven para aplicar clases de css o css directo. NgClass y NgStyle solucionan el problema de aplicar multiples estilos que con binding class o style quedarian muy cortas, ejemplo:
+
+_NgClass_
+
+```html
+<input type="text" required #nameInput4="ngModel" [(ngModel)]="person.name" />
+<!--input donde se valida si esta vacio o no mediante la validacion nativa de html 'required', '#nameInput4' guarda el booleano--->
+<hr
+  class="line-error"
+  [ngClass]="{
+    valid: nameInput4.valid,
+    invalid: nameInput4.invalid
+  }"
+/>
+<!--Aplica los estilos de la clase 'valid' o 'invalid' dependiendo si nameInput4 sea 'true' o 'false'-->
+```
+
+_NgStyle_
+
+```js
+// Controlador
+  box = {
+    width: 100,
+    height: 100,
+    bg: 'red',
+  };
+```
+
+```html
+<!--Render-->
+<div class="container">
+  <div>
+    <!--agregan binding para escuchar los cambios de las 3 variables-->
+    <input type="number" [(ngModel)]="box.width" />
+    <!--agrega un binding a width-->
+    <input type="number" [(ngModel)]="box.height" />
+    <!--agrega un binding a height-->
+    <input type="color" [(ngModel)]="box.bg" />
+    <!--agrega un binding a background color-->
+  </div>
+  <div>
+    <!--agregamos los estilos segun las variables del objeto box, estos son estilos en linea-->
+    <div
+      [ngStyle]="{
+        'width.px': box.width,
+        'height.px': box.height,
+        'background-color': box.bg,
+        'display': 'block'
+      }"
+    ></div>
+  </div>
+</div>
+```
+
+## **Crear un formulario**
+
+```html
+<!--Render-->
+<!--mediante el evento ngSubmit ejecuta metodo onRegister-->
+<form (ngSubmit)="onRegister()" #myForm="ngForm"> 
+  <div class="input-group">
+    <label for="name">Nombre</label>
+    <input
+      type="text"
+      required
+      id="name"
+      name="name"
+      [(ngModel)]="registro.name"
+    />
+    <p>Mensajes de error</p>
+  </div>
+
+  <div class="input-group">
+    <label for="email">Email</label>
+    <input
+      type="email"
+      required
+      id="email"
+      name="email"
+      [(ngModel)]="registro.email"
+    />
+    <p>Mensajes de error</p>
+  </div>
+
+  <div class="input-group">
+    <label for="password">Password</label>
+    <input
+      type="password"
+      required
+      id="password"
+      name="password"
+      [(ngModel)]="registro.password"
+    />
+    <p>Mensajes de error</p>
+  </div>
+  <button [disabled]="myForm.invalid" type="submit">Registrar</button>
+  <button type="button">Accion</button>
+</form>
+```
