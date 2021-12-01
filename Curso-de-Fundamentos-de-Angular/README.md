@@ -364,3 +364,38 @@ ngSwitch se debe usar como property binding en el elemento padre y cada caso deb
 es un plugin para chrome que nos ayuda hacer debugging de una manera mucho ms dinamica, podemos anclarla a nuestras stack de extensiones y cuando detecte que una pagina esta hecha con angular, su icono se coloreara de rojo.
 
 Ademas, cuando inspeccionamos paginas hechas con angular nos permite contar con una opcion especial donde estara todos los elementos que componen la app.
+
+## **Class and style**
+
+En angular podemos tener un dinamismo con las clases creadas en nuestro css, tenemos como ejemplo :
+
+```js
+<input type="text" required #nameInput2="ngModel" [(ngModel)]="person.name" />// Desde el ngModel se evalua si es campo esta vacio o no, esto se logra con las validaciones nativas de html
+<p class="message-error" [class.active]="nameInput2.invalid">El campo es requerido</p> //mediante el property binding usamos la sentencia class y activar una clase segun una condiciona, la condicional es la variable nameInput2.invalid
+```
+
+Tambien mediante un binding podemos agregar estilos en linea:
+
+```js
+<input type="text" required #nameInput3="ngModel" [(ngModel)]="person.name" /> // Validacion nativa desde el html
+<p [style.font-style]="nameInput3.invalid ? 'italic' : 'normal'">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia blanditiis nisi, provident cum molestias ea!</p> // mediante un ternario preguntamos si nameInput3.invalid es valido y de ser correcto style.font-style = 'italic' y si es falso es igual a 'normal'
+```
+
+otro ejemplo:
+
+```js
+<div class="container">
+  <div>
+    <input type="text"[(ngModel)]="widthImg"> <!--Captura la informacion y modifica el valor de la variable 'widthImg' mediante el ngModel-->
+  </div>
+  <div>
+    <img [style.width.%]="widthImg"[src]="person.avatar" alt="img" width="100" /> <!--aplica el nuevo valor de 'widthImg' mediante el binding style, permitiendo agregar un nuevo width ya sea en porcentaje u otra unidad de medida-->
+  </div>
+</div>
+```
+
+_Ojo_ los template se puede usar despues de ser declaradas, esto quiere decir que tiene la misma tematica que el hoisting de JavaScript, es por esto que debemos leer muy bien los errores que angular nos muestra en pantalla o consola.
+
+El uso de clases dinamicas y estilos en linea es recomendable usar otro tipo de soluciones ya que estas estan limitadas al uso de templates que hace seguimiento a las variables.
+
+## **NgClass y NgStyle**
