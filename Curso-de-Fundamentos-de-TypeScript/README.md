@@ -37,7 +37,7 @@ Los archivos .ts son los archivos escritos es TypeScript y se ejecutan con el co
 
 En este punto podemos ejecutar este archivo resultante con node de la siguiente manera `node nombreArchivo.js`.
 
-Para simplificar este proceso podemos agregar un observador de cambios en cierto archivo TypeScript, el comando `tsc --watch nombreArchivo.ts` activa este observador y compilando cada vez que se haga un cambio en el archivo .ts.
+Para simplificar este proceso podemos agregar un observador de cambios en cierto archivo TypeScript, el comando `tsc --watch nombreArchivo.ts` activa este observador y compila cada vez que se haga un cambio en el archivo .ts.
 
 ## **El archivo de configuración de TypeScript**
 
@@ -46,21 +46,21 @@ El tsconfig.json permite especificar la raiz de nuestro archivos ts para nuestro
 
 El archivo de configuracion de tsc consta de un objeto json con un atributo llamado compilerOptions.
 
-Este objeto tiene atributos de configuracion como en el caso de target que nos permite elegir la version de ecmascript.
+- Este objeto tiene atributos de configuracion como en el caso de target que nos permite elegir la version de ecmascript.
 
-El atributo module nos habilita la opcion de usar modulos en nuestro proyecto, y puede recibir como valores none, amd, system y comonjs.
+- El atributo module nos habilita la opcion de usar modulos en nuestro proyecto, y puede recibir como valores none, amd, system y comonjs.
 
-Atributo strict habilita mediante un valor booleano si se debe usar tipos estrictos.
+- Atributo strict habilita mediante un valor booleano si se debe usar tipos estrictos.
 
-Atributo removeComments indica mediante un valor booleano si se debe eliminar o no los comentarios realizados en nuestro codigo.
+- Atributo removeComments indica mediante un valor booleano si se debe eliminar o no los comentarios realizados en nuestro codigo.
 
-Otro objeto de configuraciones es include, contiene un lista de declaraciones de tipo que albergara las rutas de todos los archivos que seran parte de los archivos procesados por le compilador.
+- Otro objeto de configuraciones es include, contiene un lista de declaraciones de tipo que albergara las rutas de todos los archivos que seran parte de los archivos procesados por le compilador.
 
-objeto de configuraciones exclude es equivalente a include pero podemos excluir directorios para no ser tomados en cuenta en el proceso de compilacion.
+- Objeto de configuraciones exclude es equivalente a include pero podemos excluir directorios para no ser tomados en cuenta en el proceso de compilacion.
 
-Extends es otro objeto de configuracion donde permite la herencia de configuracion de otro archivo de configuracion.
+- Extends es otro objeto de configuracion donde permite la herencia de configuracion de otro archivo de configuracion.
 
-compileOnSave, recibe un valor booleano que habilita la compilacion automatica al guardar los cambios de nuestro archivo ts.
+- compileOnSave, recibe un valor booleano que habilita la compilacion automatica al guardar los cambios de nuestro archivo ts.
 
 de que manera podemos aprovechar la existencia de un archivo de configuracion de ts:
 
@@ -538,7 +538,7 @@ _Que sintaxis usar?_ todo depende de tu proyecto, tu grupo de trabajo o las peti
 
 ## **Funciones en TypeScript**
 
-Los parametros de las funciones son tipados, se pueden definir parametro opcionales. El tipo de retorno puede set un tipo básico, enum, alias, tipo literal o una combinacion de ellos.
+Los parametros de las funciones son tipados, se pueden definir parametro opcionales. El tipo de retorno puede ser un tipo básico, enum, alias, tipo literal o una combinacion de ellos.
 
 ```js
 // Las funciones en js se crean de la siguiente manera
@@ -585,3 +585,161 @@ const picture = createpic('August', '2021-11-25', '1000x1000');
 
 console.log({ picture });
 ```
+
+## **Interfaces**
+
+Se define como un contrato para nuestro proyecto. En pocas palabras, es una estructura de datos que obliga (para nuestro ejemplo) recibir por obligacion los parametros definidos en dicha estructura:
+
+```ts
+enum PhotoOrientation { // Usamos un enumerado para nuestro ejemplo
+  Landscape,
+  Portrait,
+  Square,
+  Panorama,
+}
+
+interface Picture {
+  //Creamos la interfaz Picture y contendra 3 parametros
+  title: string;
+  date: string;
+  orientation: PhotoOrientation;
+}
+
+function showPicture(picture: Picture) {
+  // El parametro que se recibe es de tipo Picture que es nuestra interfaz
+  console.log(
+    `[title: ${picture.title}, date: ${picture.date}, orientacion: ${picture.orientation}]`
+  );
+}
+
+let myPic = {
+  // Recreamos los parametros
+  title: 'Teste Title',
+  date: '2020-03',
+  orientation: PhotoOrientation.Landscape,
+};
+
+showPicture(myPic); // Llamamos la funcion con los parametros recreados, ts valida que esos parametro coincidan con los parametros establecidos en la interfaz
+
+showPicture({
+  title: 'Test Title',
+  date: '2020-03',
+  orientation: PhotoOrientation.Portrait,
+  // extra: 'test', //Error, no esta definida en la interfaz
+});
+```
+
+## **Interfaces: propiedades opcionales**
+
+No todas las propiedades de una interfaz es requerida y esto se puede definir mediante el simbolo '?'.
+
+Ejemplo:
+
+```ts
+interface PictureConfig {
+  title?: string; //luego de definir la propiedad de la interfaz, indicamos que esta es opcional
+  date?: string;
+  orientation?: PhotoOrientation;
+}
+
+function generatePicture(config: PictureConfig) {
+  const pic = { title: 'Default', date: '2020-03' };
+
+  if (config.title) {
+    pic.title = config.title;
+  }
+
+  if (config.date) {
+    pic.date = config.date;
+  }
+
+  return pic;
+}
+
+let picture = generatePicture({}); // No tenemos error ya que todas las propiedades de la interfaz son opcionales
+console.log({ picture });
+
+picture = generatePicture({ title: 'Travel Pic' }); // Solo modifica la propiedad title
+console.log({ picture });
+
+picture = generatePicture({ title: 'Travel Pic', date: '2020-07' }); // Modifica las propiedad title y date
+console.log({ picture });
+```
+
+Existe situaciones donde una propiedad de la interfaz no debe ser modificada y podemos indicarle a TypeScript que tome esta propiedad como uso exclusivo de lectura:
+
+```ts
+interface User {
+  readonly id: number; // Usamos la palabra reservada 'readonly' antes de declarar la propiedad 'id'
+  userName: string;
+  isPro: boolean;
+}
+
+let user: User;
+
+user = {
+  id: 7,
+  userName: 'Mooenz',
+  isPro: true,
+};
+console.log({ user });
+
+// user.id = 77; // Error al intentar modificar un atributo que se definio como de uso de solo lectura
+user.isPro = false;
+console.log({ user });
+```
+
+## **Extensión de interfaces**
+
+Una interfaz puede extenderse a otra y copiar las propiedades a otra ganando flexibilidad y reusabilidad de interfaces:
+
+```ts
+enum PhotoOrientation {
+  Landscape,
+  Portrait,
+  Square,
+  Panorama,
+}
+
+interface Entity {
+  // interfaz padre
+  id: number;
+  title: string;
+}
+
+interface Album extends Entity {
+  //extendemos la interfaz padre
+  description: string;
+}
+
+interface Picture extends Entity {
+  //extendemos la interfaz padre
+  orientation: PhotoOrientation;
+}
+
+const album: Album = {
+  // Creamos una nueva variable de tipo `Album`
+  id: 70,
+  title: 'Mooenz: retorno prohibido',
+  description: 'No se que significa un retorno prohibido',
+};
+
+const picture: Picture = {
+  // Creamos una nueva variable de tipo `Picture`
+  id: 7,
+  title: 'Family',
+  orientation: PhotoOrientation.Landscape,
+};
+
+let newPicture = {} as Picture; // newPicture no toma por obligacion tener todos los parametros de Picture ya que se realizo una aserción de tipo (cambio de tipo) a newPicture
+newPicture.id = 2;
+newPicture.title = 'Moon';
+
+console.log({
+  album,
+  picture,
+  newPicture,
+});
+```
+
+## **Clases**
