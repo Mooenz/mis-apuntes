@@ -67,3 +67,23 @@ Mediante la directiva v-if podemos renderizar elementos del DOM de forma condici
 ## **Renderizado de listas**
 
 En la renderización de listas debemos user la directiva v-for dentro del elemento padre o contenedor de los items a mostrar. Esta directiva recibe dos parámetros, el primero es el item que se esta iterando y el segundo es el index del item que se esta iterando. También podemos utilizar la directiva v-for para iterar un objeto, en este caso el primer parámetro sera el valor del item y el segundo parámetro sera el key del item. Para evitar problemas de renderizado de los items debe agregar un atributo key con un valor único a cada item, podemos usar el indice como elemento identificador o usar algun elemento propio del item que no se repita.
+
+## **Comunicación entre componentes (Padre a Hijo)**
+
+La comunicación entre componentes padre a hijo se realiza por medio de las props. Los props es información de cualquier tipo de dato enviada especialmente de manera descendente, el componente recibir esta información y hace uso de ella ya sea mostrándola en pantalla o usándola para generar alguna acción. Existe una mala practica y es la modificación de las props desde el componente hijo cambiando la información enviada sin comunicarle al componente padre.
+
+## **Comunicaciones entre componentes (Hijo a Padre)
+
+Para solucionar el problema anterior debemos emitir al componente padre el cambio realizado, estos se puede realizar con el método "$emit" que permite ejecutar alguna acción que permita informar el cambio realizado en las props enviadas.
+
+## **Custom v-model**
+
+Con v-model podemos crear una conexión entre dos elementos de nuestra ui. Podemos colocar como ejemplo la conexión que puede existir entre un input y una caja de texto, en el momento de escribir en nuestro input la caja de texto se actualiza o muestra lo escrito en el input, v-model permite crear esta conexión.
+
+## **Comunicación con componentes profundos**
+
+Un componente profundo es aquel componente que se no tiene una comunicación directa con el componente principal o un componente donde se ejecuta la acción de comunicación (comunicación entre Abuelo y Nieto). Para lograr esta comunicación hacemos uso de Provide y inject. Con provide logramos "proveer" el dato que necesitamos compartir en un entorno global de mi aplicación, e "inyectamos" los datos obtenidos con inject al componente que recibirá la información compartida. Debemos tener en cuenta que al momento de hacer uso del provide, este se debe hacer como una función ya que le estaremos permitiendo a Vue ejecutar el provide cada vez que exista un cambio, generando reactividad en nuestros componentes.
+
+## **Instancias de componentes**
+
+Vue con el objetivo de tener un control nuestra aplicación, crea instancias o copias de nuestros componente con el fin de interactuar con vue y JavaScript de forma progresiva.
