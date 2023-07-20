@@ -10,11 +10,11 @@ El desarrollo basado en componentes, la intención es abstraer todas las partes 
 
 ## **Componente ui**
 
-Solo elementos alojados en la interfaz de nuestras aplicaciones. Los componentes de UI son los que se encargan de la interacción con el usuario.
+Son elementos alojados en la interfaz de nuestras aplicaciones. Los componentes UI son los que se encargan de la interacción con el usuario.
 
 ## **Partes de un componente ui**
 
-Como primera medida tenemos la vista que es parte que el usuario vera y interactuara. Luego tenemos el estado ya que el componente puede tener varios estados dependiendo de la interacción del usuario, si el componente esta duplicado cada uno de ellos debe tener un estado independiente. Por ultimo tenemos la interfaz que permite ejecutar alguna función o acción que se ejecutara en el momento de interactuar con el componente.
+Como primera medida tenemos la vista que es la parte que el usuario vera y interactuara. Luego tenemos el estado ya que el componente puede tener varios estados dependiendo de la interacción del usuario, si el componente esta duplicado cada uno de ellos debe tener un estado independiente. Por ultimo tenemos la interfaz que permite ejecutar alguna función o acción que se ejecutara en el momento de interactuar con el componente.
 
 ## **Patrón de MVVM**
 
@@ -24,15 +24,15 @@ Vista: Parte que el usuario ve / ViewModel:Es un agente que sincroniza la vista 
 
 ## **Two-way data binding**
 
-Es una forma de sincronizar la vista con el modelo de una forma transparente para el desarrollador.
+Es una forma de sincronizar la vista con el modelo de una forma transparente para el desarrollador. Esto se realiza con la directiva v-model
 
 ## **Interpolación de datos**
 
-En vue si necesitamos visualizar variables en nuestro html debemos hacerlo con {{}} doble llave y dentro de ellas la variable que deseamos mostrar.  
+En Vue si necesitamos visualizar variables en nuestro html debemos hacerlo con {{}} doble llave y dentro de ellas la variable que deseamos mostrar.  
 
 ## **Directivas**
 
-Las directivas son atributos especiales agregados o complementados a nuestro HTML, estos atributos nos permite manipulas funcionalidades del DOM o mostrar atributos o propiedades HTML de forma dinámica. Las directivas se identifican por el prefijo v-.
+Las directivas son atributos especiales agregados o complementados a nuestro HTML, estos atributos nos permite manipular funcionalidades del DOM, mostrar atributos o propiedades HTML de forma dinámica. Las directivas se identifican por el prefijo v-.
 
 Lista de directivas:  
 
@@ -78,7 +78,7 @@ Para solucionar el problema anterior debemos emitir al componente padre el cambi
 
 ## **Custom v-model**
 
-Con v-model podemos crear una conexión entre dos elementos de nuestra ui. Podemos colocar como ejemplo la conexión que puede existir entre un input y una caja de texto, en el momento de escribir en nuestro input la caja de texto se actualiza o muestra lo escrito en el input, v-model permite crear esta conexión.
+Con v-model podemos crear una conexión entre dos elementos de nuestra ui. Podemos colocar como ejemplo la conexión que puede existir entre un input y una caja de texto, en el momento de escribir en nuestro input y la caja de texto se actualiza o muestra lo escrito en el input, v-model permite crear esta conexión.
 
 ## **Comunicación con componentes profundos**
 
